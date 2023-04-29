@@ -1,0 +1,12 @@
+version: "3.0"
+services:
+  logic-service:
+    build:
+      context: ../logic-service
+      dockerfile: ../logic-service/Dockerfile
+    networks:
+      - web
+    restart: on-failure
+
+networks:
+  web:

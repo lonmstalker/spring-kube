@@ -1,0 +1,14 @@
+openapi: "3.1.0"
+info:
+  title: "Logic service"
+  version: "1.0.0"
+
+paths:
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: jwt
