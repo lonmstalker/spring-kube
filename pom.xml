@@ -188,7 +188,7 @@
                                 <goal>copy-resources</goal>
                             </goals>
                             <configuration>
-                                <outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+                                <outputDirectory>${project.basedir}/target/classes</outputDirectory>
                                 <resources>
                                     <resource>
                                         <directory>${project.basedir}/../logic-common/src/main/resources</directory>

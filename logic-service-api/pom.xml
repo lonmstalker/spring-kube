@@ -50,7 +50,7 @@
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <modelPackage>io.lonmstalker.springkube.dto</modelPackage>
                             <output>${project.basedir}/target/generated-sources/kotlin</output>
-                            <templateDirectory>${project.basedir}/src/main/resources/openapi/templates</templateDirectory>
+                            <templateDirectory>${project.basedir}/target/classes/openapi/templates</templateDirectory>
                             <configOptions>
                                 <reactive>true</reactive>
                                 <sourceFolder>/</sourceFolder>
