@@ -1,5 +1,5 @@
 spring:
   messages:
     encoding: UTF-8
-    basename: errors_ru, messages_ru
+    basename: /config/errors,/config/messages
     use-code-as-default-message: false

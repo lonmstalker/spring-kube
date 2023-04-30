@@ -3,6 +3,7 @@ package io.lonmstalker.springkube.exception.handler
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.lonmstalker.springkube.constants.ErrorCodes
 import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_MEDIA_TYPE
+import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_REQUEST_BODY
 import io.lonmstalker.springkube.exception.BaseException
 import io.lonmstalker.springkube.helper.ClockHelper
 import io.lonmstalker.springkube.helper.ReactiveMessageHelper
@@ -20,6 +21,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.web.reactive.function.UnsupportedMediaTypeException
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.server.ServerWebInputException
 import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -54,20 +56,35 @@ class ReactiveExceptionHandler(
             return ex.writeBody(response, buildErrorDto(ex.message, status = 400))
         }
         if (ex is UnsupportedMediaTypeException) {
-            response.statusCode = HttpStatus.UNSUPPORTED_MEDIA_TYPE
-            return ex.writeBody(
+            return ex.withCode(
                 response,
-                buildErrorDto(messageHelper.getMessageByExchange(exchange, INVALID_MEDIA_TYPE), INVALID_MEDIA_TYPE, 415)
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+                messageHelper.getMessageByExchange(exchange, INVALID_MEDIA_TYPE),
+                INVALID_MEDIA_TYPE,
+            )
+        }
+        if (ex is ServerWebInputException) {
+            return ex.withCode(
+                response,
+                ex.statusCode.value(),
+                messageHelper.getMessageByExchange(exchange, INVALID_REQUEST_BODY),
+                INVALID_REQUEST_BODY,
             )
         }
         if (ex is ResponseStatusException) {
-            response.statusCode = ex.statusCode
-            return ex.writeBody(response, buildErrorDto(status = ex.statusCode.value()))
+            return ex.withCode(response, ex.statusCode.value(), null, null)
         }
 
         response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
-
         return ex.writeBody(response, buildErrorDto(), true)
+    }
+
+    private fun Throwable.withCode(rp: ServerHttpResponse, status: Int, message: String?, code: String?): Mono<Void> {
+        rp.rawStatusCode = status
+        return this.writeBody(
+            rp,
+            buildErrorDto(message, code ?: ErrorCodes.INTERNAL_SERVER_ERROR, status)
+        )
     }
 
     private fun buildErrorDto(
