@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-init-tables
+      author: lonmstalker
+      changes:
+        - sqlFile:
+            path: /db/changelog/1.0/sql/init.sql
+            endDelimiter: \nGO
+            splitStatements: true
+            stripComments: true

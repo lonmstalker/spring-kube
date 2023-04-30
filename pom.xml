@@ -18,6 +18,8 @@
     <properties>
         <java.version>17</java.version>
         <kotlin.version>1.7.22</kotlin.version>
+        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
 
         <openapi.version>6.5.0</openapi.version>
@@ -26,6 +28,13 @@
 
         <liquibase-plugin.version>4.21.1</liquibase-plugin.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+
+        <!--suppress UnresolvedMavenProperty -->
+        <db.url>${env.DB_URL}</db.url>
+        <!--suppress UnresolvedMavenProperty -->
+        <db.user>${env.DB_USER}</db.user>
+        <!--suppress UnresolvedMavenProperty -->
+        <db.password>${env.DB_PASSWORD}</db.password>
     </properties>
 
     <modules>
@@ -45,11 +54,6 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-allopen</artifactId>
-                <version>${kotlin.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.parser.v3</groupId>
@@ -83,6 +87,7 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -116,6 +121,7 @@
                         <dependency>
                             <groupId>org.jetbrains.kotlin</groupId>
                             <artifactId>kotlin-maven-allopen</artifactId>
+                            <version>${kotlin.version}</version>
                         </dependency>
                     </dependencies>
                 </plugin>

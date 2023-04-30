@@ -7,6 +7,10 @@ services:
     restart: always
     depends_on:
       - postgres
+    environment:
+      DB_URL: "postgres:5432"
+      DB_USER: "logic_user"
+      DB_PASSWORD: "logic_user"
     deploy:
       resources:
         limits:
@@ -21,7 +25,7 @@ services:
     environment:
       POSTGRES_DB: "spring_kube"
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "password"
+      POSTGRES_PASSWORD: "postgres"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ./pgdata:/docker-entrypoint-initdb.d

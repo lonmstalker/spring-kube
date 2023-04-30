@@ -1,14 +1,60 @@
-openapi: "3.1.0"
+openapi: '3.1.0'
 info:
-  title: "Logic service"
-  version: "1.0.0"
+  title: 'Logic service'
+  version: '1.0.0'
+servers:
+  - url: '/api/v1'
 
 paths:
-
+  /bot/list:
+    get:
+      summary: 'Get bots'
+      operationId: 'getBots'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bot'
+          description: 'Bot information'
 
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: jwt
+  schemas:
+    Bot:
+      required:
+        - title
+        - url
+        - hash
+      properties:
+        id:
+          type:
+            - string
+          format: uuid
+          description: 'Идентификатор бота'
+        title:
+          type:
+            - string
+          description: 'Название бота'
+        url:
+          type:
+            - string
+          description: 'Ссылка на бота'
+        hash:
+          type:
+            - string
+          description: 'Хеш для подключения к боту'
+        status:
+          type:
+            - string
+          description: 'Статус работоспособности бота'
+        createdBy:
+          type:
+            - string
+          format: uuid
+          description: 'Идентификато создателя бота'
+        createdDate:
+          type:
+            - string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+          description: 'Дата создания бота'

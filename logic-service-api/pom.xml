@@ -24,7 +24,6 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.openapitools</groupId>
@@ -37,13 +36,27 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yml</inputSpec>
-                            <generatorName>kotlin</generatorName>
+                            <generatorName>kotlin-spring</generatorName>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <apiPackage>io.lonmstalker.springkube.api</apiPackage>
+                            <modelPackage>io.lonmstalker.springkube.dto</modelPackage>
                             <configOptions>
+                                <reactive>true</reactive>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <serializableModel>true</serializableModel>
                                 <sourceFolder>src/gen/kotlin/main</sourceFolder>
+                                <basePackage>io.lonmstalker.springkube</basePackage>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <serializationLibrary>kotlinx_serialization</serializationLibrary>
                             </configOptions>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

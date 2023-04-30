@@ -1,0 +1,12 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application.name: logic-service
+  r2dbc:
+    url: r2dbc:postgresql//${DB_URL:localhost:5432}/spring_kube
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    pool:
+      max-size: ${MAX_SIZE:10}
+      initial-size: ${MAX_SIZE:10}
