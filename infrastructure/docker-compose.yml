@@ -4,9 +4,62 @@ services:
     build:
       context: ../logic-service
       dockerfile: ../logic-service/Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+    deploy:
+      resources:
+        limits:
+          memory: 400M
     networks:
       - web
-    restart: on-failure
+      - postgres
 
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: "spring_kube"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./pgdata:/docker-entrypoint-initdb.d
+      - ./config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - pgVol:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d spring_kube"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    networks:
+      - postgres
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DATA_SOURCE_URI: "postgres:5432/spring_kube?sslmode=disable"
+      DATA_SOURCE_USER: "pg_monitor"
+      DATA_SOURCE_PASS: "pg_monitor"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
+    volumes:
+      - ./config/exporter-queries.yml:/etc/postgres_exporter/queries.yaml:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 200M
 networks:
   web:
+  postgres:
+
+volumes:
+  pgVol:
