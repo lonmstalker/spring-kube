@@ -51,8 +51,7 @@ components:
     Bots:
       type: array
       items:
-        oneOf:
-          - $ref: '#/components/schemas/Bot'
+        $ref: '#/components/schemas/Bot'
     Bot:
       required:
         - title
@@ -74,6 +73,7 @@ components:
           description: 'Хеш для подключения к боту'
         status:
           type: string
+          enum: ['enabled', 'disabled', 'blocked']
           description: 'Статус работоспособности бота'
         createdBy:
           type: string
@@ -84,3 +84,7 @@ components:
           format: date-time
           example: '2021-01-30T08:30:00Z'
           description: 'Дата создания бота'
+        version:
+          type: integer
+          format: i32
+          description: 'Версия бота'

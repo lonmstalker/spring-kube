@@ -38,18 +38,32 @@
     </properties>
 
     <modules>
+        <module>logic-common</module>
         <module>logic-service</module>
+        <module>logic-service-db</module>
         <module>logic-service-api</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <!-- MODULES -->
             <dependency>
                 <groupId>io.lonmstalker</groupId>
                 <artifactId>logic-service-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.lonmstalker</groupId>
+                <artifactId>logic-service-db</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.lonmstalker</groupId>
+                <artifactId>logic-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
+            <!-- LIBRARIES -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
@@ -111,6 +125,7 @@
                     </executions>
                     <configuration>
                         <sourceDirs>
+                            <sourceDir>${project.basedir}/src/main/java</sourceDir>
                             <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                             <sourceDir>${project.basedir}/target/generated-sources/kotlin</sourceDir>
                         </sourceDirs>
@@ -160,6 +175,26 @@
                             <goals>
                                 <goal>testCompile</goal>
                             </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>copy-resources</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${project.basedir}/../logic-common/src/main/resources</directory>
+                                    </resource>
+                                </resources>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>

@@ -16,21 +16,17 @@
         <!-- MODULES -->
         <dependency>
             <groupId>io.lonmstalker</groupId>
+            <artifactId>logic-service-db</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.lonmstalker</groupId>
             <artifactId>logic-service-api</artifactId>
         </dependency>
 
         <!-- SPRING BOOT -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <!-- LIBRARIES -->
@@ -39,23 +35,8 @@
             <artifactId>jackson-module-kotlin</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-tracing-bridge-brave</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-dynatrace</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
         <!-- DATASOURCE -->
@@ -116,14 +97,15 @@
                                 </database>
                                 <generate>
                                     <pojos>true</pojos>
+                                    <routines>false</routines>
                                     <instanceFields>true</instanceFields>
                                 </generate>
                                 <target>
                                     <locale>ru</locale>
                                     <clean>true</clean>
-                                    <directory>target/generated-sources/kotlin</directory>
-                                    <packageName>io.lonmstalker.springkube.model</packageName>
                                     <encoding>UTF-8</encoding>
+                                    <packageName>io.lonmstalker.springkube.model</packageName>
+                                    <directory>${project.basedir}/target/generated-sources/kotlin</directory>
                                 </target>
                             </generator>
                         </configuration>
@@ -147,10 +129,6 @@
                             <goal>kapt</goal>
                         </goals>
                         <configuration>
-                            <sourceDirs>
-                                <sourceDir>src/main/kotlin</sourceDir>
-                                <sourceDir>src/main/java</sourceDir>
-                            </sourceDirs>
                             <annotationProcessorPaths>
                                 <annotationProcessorPath>
                                     <groupId>org.mapstruct</groupId>

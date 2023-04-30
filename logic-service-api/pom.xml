@@ -21,10 +21,17 @@
             <groupId>io.swagger.parser.v3</groupId>
             <artifactId>swagger-parser</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.lonmstalker</groupId>
+            <artifactId>logic-common</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -36,20 +43,25 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yml</inputSpec>
+                            <modelNameSuffix>Dto</modelNameSuffix>
                             <generatorName>kotlin-spring</generatorName>
                             <packageName>io.lonmstalker.springkube</packageName>
                             <apiPackage>io.lonmstalker.springkube.api</apiPackage>
+                            <generateSupportingFiles>false</generateSupportingFiles>
                             <modelPackage>io.lonmstalker.springkube.dto</modelPackage>
+                            <output>${project.basedir}/target/generated-sources/kotlin</output>
+                            <templateDirectory>${project.basedir}/src/main/resources/openapi/templates</templateDirectory>
                             <configOptions>
                                 <reactive>true</reactive>
+                                <sourceFolder>/</sourceFolder>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useSpringBoot3>true</useSpringBoot3>
+                                <delegatePattern>false</delegatePattern>
                                 <gradleBuildFile>false</gradleBuildFile>
                                 <serializableModel>true</serializableModel>
                                 <skipDefaultInterface>true</skipDefaultInterface>
                                 <basePackage>io.lonmstalker.springkube</basePackage>
                                 <serializationLibrary>kotlinx_serialization</serializationLibrary>
-                                <output>target/generated-sources/kotlin</output>
                             </configOptions>
                         </configuration>
                     </execution>
