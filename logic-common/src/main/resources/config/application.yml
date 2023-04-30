@@ -1,0 +1,5 @@
+spring:
+  messages:
+    encoding: UTF-8
+    basename: errors_ru, messages_ru
+    use-code-as-default-message: false

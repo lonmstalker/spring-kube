@@ -23,12 +23,6 @@
             <artifactId>logic-service-api</artifactId>
         </dependency>
 
-        <!-- SPRING BOOT -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
         <!-- LIBRARIES -->
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
