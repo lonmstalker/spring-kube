@@ -9,13 +9,16 @@ import io.lonmstalker.springkube.helper.ReactiveMessageHelper
 import io.lonmstalker.springkube.model.ErrorDto
 import io.lonmstalker.springkube.model.FieldError
 import io.lonmstalker.springkube.utils.internal.ExceptionUtils.toError
+import jakarta.annotation.PostConstruct
 import jakarta.validation.ConstraintViolationException
 import jakarta.validation.ValidationException
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.web.reactive.function.UnsupportedMediaTypeException
+import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Flux
@@ -24,8 +27,13 @@ import reactor.core.publisher.Mono
 class ReactiveExceptionHandler(
     private val clockHelper: ClockHelper,
     private val objectMapper: ObjectMapper,
-    private val messageHelper: ReactiveMessageHelper,
+    private val messageHelper: ReactiveMessageHelper
 ) : WebExceptionHandler {
+
+    @PostConstruct
+    fun init() {
+        log.info("${this::class.java} is enabled")
+    }
 
     override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> {
         val response = exchange.response
@@ -34,27 +42,32 @@ class ReactiveExceptionHandler(
         response.headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
         if (ex is BaseException) {
-            return writeBody(response, buildErrorDto(messageHelper.getMessageByExchange(exchange, ex)))
+            return ex.writeBody(response, buildErrorDto(messageHelper.getMessageByExchange(exchange, ex)))
         }
         if (ex is ConstraintViolationException) {
-            return writeBody(
+            return ex.writeBody(
                 response,
                 buildErrorDto(ex.message, status = 400, fields = ex.toError(exchange, messageHelper))
             )
         }
         if (ex is ValidationException) {
-            return writeBody(response, buildErrorDto(ex.message, status = 400))
+            return ex.writeBody(response, buildErrorDto(ex.message, status = 400))
         }
         if (ex is UnsupportedMediaTypeException) {
             response.statusCode = HttpStatus.UNSUPPORTED_MEDIA_TYPE
-            return writeBody(
+            return ex.writeBody(
                 response,
                 buildErrorDto(messageHelper.getMessageByExchange(exchange, INVALID_MEDIA_TYPE), INVALID_MEDIA_TYPE, 415)
             )
         }
+        if (ex is ResponseStatusException) {
+            response.statusCode = ex.statusCode
+            return ex.writeBody(response, buildErrorDto(status = ex.statusCode.value()))
+        }
 
         response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
-        return writeBody(response, buildErrorDto())
+
+        return ex.writeBody(response, buildErrorDto(), true)
     }
 
     private fun buildErrorDto(
@@ -70,8 +83,22 @@ class ReactiveExceptionHandler(
         data = fields
     )
 
-    private fun writeBody(response: ServerHttpResponse, message: Any): Mono<Void> =
+    private fun Throwable.writeBody(response: ServerHttpResponse, message: Any, isError: Boolean = false): Mono<Void> =
         objectMapper.writeValueAsBytes(message)
             .let { Flux.just(response.bufferFactory().wrap(it)) }
             .let { response.writeWith(it) }
+            .doFinally { logException(this, isError) }
+
+    private fun logException(ex: Throwable, isError: Boolean) {
+        if (isError || log.isDebugEnabled) {
+            log.error("catch exception: ", ex)
+        } else {
+            log.debug("catch exception: {}", ex.message)
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        private val log = LoggerFactory.getLogger(ReactiveExceptionHandler::class.java)
+    }
 }

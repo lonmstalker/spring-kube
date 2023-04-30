@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 
 @Configuration
 @Import(ExceptionConfig.ReactiveErrorConfig::class)
@@ -17,6 +19,7 @@ class ExceptionConfig {
     class ReactiveErrorConfig {
 
         @Bean
+        @Order(Ordered.HIGHEST_PRECEDENCE)
         fun exceptionHandler(
             clockHelper: ClockHelper,
             messageHelper: ReactiveMessageHelper,

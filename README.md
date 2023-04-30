@@ -9,7 +9,8 @@
 1. Kotlin 1.7.22
 2. Java 17
 3. PostgreSQL 15
-4. JOOQ
-5. Liquibase
-6. Spring Boot
-7. Spring WebFlux
+4. JOOQ 3.17
+5. Liquibase 4.17
+6. Spring Boot 3.0.6 (Spring WebFlux)
+7. MapStruct
+8. OpenAPI 3.0.0

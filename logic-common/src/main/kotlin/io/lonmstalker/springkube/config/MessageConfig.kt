@@ -25,5 +25,6 @@ class MessageConfig {
         @Bean
         fun messageHelper(messageSource: MessageSource, localeContextResolver: LocaleContextResolver) =
             ReactiveMessageHelper(messageSource, localeContextResolver)
+
     }
 }

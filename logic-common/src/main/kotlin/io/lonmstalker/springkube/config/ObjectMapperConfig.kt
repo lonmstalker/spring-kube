@@ -15,7 +15,7 @@ class ObjectMapperConfig {
     fun objectMapper(): ObjectMapper = ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
         .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
+        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
         .configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true)
         .findAndRegisterModules()
 }

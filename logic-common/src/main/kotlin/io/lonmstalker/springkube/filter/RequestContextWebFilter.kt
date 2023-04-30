@@ -1,6 +1,8 @@
 package io.lonmstalker.springkube.filter
 
 import io.lonmstalker.springkube.model.RequestContext
+import jakarta.annotation.PostConstruct
+import org.slf4j.LoggerFactory
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
@@ -11,6 +13,11 @@ import java.util.*
 class RequestContextWebFilter(
     private val localeContextResolver: LocaleContextResolver
 ) : WebFilter {
+
+    @PostConstruct
+    fun init() {
+        LoggerFactory.getLogger(RequestContextWebFilter::class.java).info("${this::class.java} is enabled")
+    }
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> =
         chain.filter(exchange)

@@ -4,9 +4,17 @@ server:
 spring:
   application.name: logic-service
   r2dbc:
-    url: r2dbc:postgresql//${DB_URL:localhost:5432}/spring_kube
+    url: r2dbc:postgresql://${DB_URL:localhost:5432}/spring_kube
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     pool:
       max-size: ${MAX_SIZE:10}
       initial-size: ${MAX_SIZE:10}
+
+logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
+  level:
+    root: ${LOGGING_ROOT:error}
+    io.lonmstalker: ${LOGGING_PROJECT:info}
