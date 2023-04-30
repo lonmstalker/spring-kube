@@ -112,15 +112,18 @@
                                 <database>
                                     <inputSchema>public</inputSchema>
                                     <includes>.*</includes>
-                                    <excludes>pg_.*|sql_.*</excludes>
+                                    <excludes>pg_.*|sql_.*|databasechangelog.*</excludes>
                                 </database>
                                 <generate>
                                     <pojos>true</pojos>
                                     <instanceFields>true</instanceFields>
                                 </generate>
                                 <target>
+                                    <locale>ru</locale>
+                                    <clean>true</clean>
                                     <directory>target/generated-sources/kotlin</directory>
                                     <packageName>io.lonmstalker.springkube.model</packageName>
+                                    <encoding>UTF-8</encoding>
                                 </target>
                             </generator>
                         </configuration>

@@ -13,7 +13,8 @@ CREATE TABLE bot
     hash         VARCHAR(255)                           NOT NULL,
     status       VARCHAR(50)                            NOT NULL,
     created_by   UUID                                   NOT NULL,
-    created_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    created_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    version      INT                      DEFAULT 0     NOT NULL
 );
 -- rollback drop table bot;
 
@@ -25,7 +26,8 @@ CREATE TABLE bot_action
     type         VARCHAR(50)                            NOT NULL,
     data         JSONB                                  NOT NULL,
     created_by   UUID                                   NOT NULL,
-    created_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    created_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    version      INT                      DEFAULT 0     NOT NULL
 );
 -- rollback drop table bot_action;
 
@@ -38,7 +40,8 @@ CREATE TABLE bot_position_info
     from_position VARCHAR(100)                           NOT NULL,
     to_position   VARCHAR(100)                           NULL,
     created_by    UUID                                   NOT NULL,
-    created_date  TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    created_date  TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    version       INT                      DEFAULT 0     NOT NULL
 );
 -- rollback drop table bot_position_info;
 

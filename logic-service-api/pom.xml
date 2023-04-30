@@ -37,18 +37,19 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yml</inputSpec>
                             <generatorName>kotlin-spring</generatorName>
-                            <skipValidateSpec>true</skipValidateSpec>
+                            <packageName>io.lonmstalker.springkube</packageName>
                             <apiPackage>io.lonmstalker.springkube.api</apiPackage>
                             <modelPackage>io.lonmstalker.springkube.dto</modelPackage>
                             <configOptions>
                                 <reactive>true</reactive>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useSpringBoot3>true</useSpringBoot3>
+                                <gradleBuildFile>false</gradleBuildFile>
                                 <serializableModel>true</serializableModel>
-                                <sourceFolder>src/gen/kotlin/main</sourceFolder>
-                                <basePackage>io.lonmstalker.springkube</basePackage>
                                 <skipDefaultInterface>true</skipDefaultInterface>
+                                <basePackage>io.lonmstalker.springkube</basePackage>
                                 <serializationLibrary>kotlinx_serialization</serializationLibrary>
+                                <output>target/generated-sources/kotlin</output>
                             </configOptions>
                         </configuration>
                     </execution>
