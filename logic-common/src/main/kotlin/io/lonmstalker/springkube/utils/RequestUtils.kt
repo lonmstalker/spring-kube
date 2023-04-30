@@ -1,6 +1,6 @@
 package io.lonmstalker.springkube.utils
 
-import io.lonmstalker.springkube.model.RequestContext
+import io.lonmstalker.springkube.model.system.RequestContext
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import reactor.core.publisher.Mono
 

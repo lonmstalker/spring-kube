@@ -10,6 +10,7 @@ data class Bot(
     val url: String,
     val hash: String,
     val createdBy: UUID?,
+    val userGroupId: UUID?,
     val createdDate: OffsetDateTime?,
     val version: Int = 0,
     val status: String = BotDto.Status.enabled.name,

@@ -1,10 +1,10 @@
 package io.lonmstalker.springkube.exception
 
-data class BaseException(
+abstract class BaseException(
     val msg: String,
     val code: String,
     val args: Array<Any>? = null,
-    val cause0: Throwable? = null,
+    cause0: Throwable? = null,
 ) : RuntimeException(msg, cause0) {
 
     override fun equals(other: Any?): Boolean {

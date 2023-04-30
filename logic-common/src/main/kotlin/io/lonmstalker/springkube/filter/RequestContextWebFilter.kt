@@ -1,6 +1,6 @@
 package io.lonmstalker.springkube.filter
 
-import io.lonmstalker.springkube.model.RequestContext
+import io.lonmstalker.springkube.model.system.RequestContext
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.web.server.ServerWebExchange

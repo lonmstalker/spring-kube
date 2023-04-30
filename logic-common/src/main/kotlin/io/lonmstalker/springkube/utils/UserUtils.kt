@@ -1,9 +1,10 @@
 package io.lonmstalker.springkube.utils
 
+import io.lonmstalker.springkube.model.UserInfo
 import java.util.UUID
 
 object UserUtils {
 
     @JvmStatic
-    fun getUserId(): UUID = UUID.randomUUID()
+    fun getUser(): UserInfo = UserInfo(UUID.randomUUID(), UUID.randomUUID())
 }

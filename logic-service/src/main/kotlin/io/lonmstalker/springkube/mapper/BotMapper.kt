@@ -17,9 +17,9 @@ import java.util.*
 )
 interface BotMapper : RecordMapper<Record, Bot> {
 
-    @Mapping(target = "id", defaultExpression = "java(UUID.randomUUID())")
-    fun fromRecord(bot: BotRecord): Bot
+    fun fromRecord(bot: Record?): Bot
 
+    @Mapping(target = "userGroupId", ignore = true)
     @Mapping(target = "id", defaultExpression = "java(UUID.randomUUID())")
     fun toModel(bot: BotDto): Bot
 

@@ -1,4 +1,4 @@
-package io.lonmstalker.springkube.model
+package io.lonmstalker.springkube.model.system
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude

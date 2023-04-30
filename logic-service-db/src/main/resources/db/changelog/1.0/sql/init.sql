@@ -7,14 +7,15 @@ CREATE EXTENSION "uuid-ossp";
 -- changeset lonmstalker:create-bot-table
 CREATE TABLE bot
 (
-    id           UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
-    title        VARCHAR(255)                           NOT NULL,
-    url          VARCHAR(255)                           NOT NULL,
-    hash         VARCHAR(255)                           NOT NULL,
-    status       VARCHAR(50)                            NOT NULL,
-    created_by   UUID                                   NOT NULL,
-    created_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    version      INT                      DEFAULT 0     NOT NULL
+    id            UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
+    title         VARCHAR(255)                           NOT NULL,
+    url           VARCHAR(255)                           NOT NULL,
+    hash          VARCHAR(255)                           NOT NULL,
+    status        VARCHAR(50)                            NOT NULL,
+    user_group_id UUID                                   NOT NULL,
+    created_by    UUID                                   NOT NULL,
+    created_date  TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    version       INT                      DEFAULT 0     NOT NULL
 );
 -- rollback drop table bot;
 

@@ -18,10 +18,22 @@ class BotController(
 
     override suspend fun findById(id: UUID): BotDto =
         this.botService
-            .findById(id, UserUtils.getUserId())
+            .findById(id, UserUtils.getUser())
             .let { this.botMapper.toDto(it) }
 
     override fun getBots(): Flow<BotDto> =
-        this.botService.getBots(UserUtils.getUserId())
+        this.botService
+            .getBots(UserUtils.getUser(), true)
             .map { this.botMapper.toDto(it) }
+
+    override suspend fun saveBot(bot: BotDto): BotDto =
+        this.botService
+            .save(this.botMapper.toModel(bot), UserUtils.getUser())
+            .let { this.botMapper.toDto(it) }
+
+
+    override suspend fun updateBot(bot: BotDto): BotDto =
+        this.botService
+            .update(this.botMapper.toModel(bot), UserUtils.getUser())
+            .let { this.botMapper.toDto(it) }
 }

@@ -1,7 +1,7 @@
 package io.lonmstalker.springkube.utils.internal
 
 import io.lonmstalker.springkube.helper.ReactiveMessageHelper
-import io.lonmstalker.springkube.model.FieldError
+import io.lonmstalker.springkube.model.system.FieldError
 import jakarta.validation.ConstraintViolation
 import jakarta.validation.ConstraintViolationException
 import org.springframework.web.server.ServerWebExchange

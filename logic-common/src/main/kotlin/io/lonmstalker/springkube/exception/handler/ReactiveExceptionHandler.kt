@@ -6,8 +6,8 @@ import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_MEDIA_TYPE
 import io.lonmstalker.springkube.exception.BaseException
 import io.lonmstalker.springkube.helper.ClockHelper
 import io.lonmstalker.springkube.helper.ReactiveMessageHelper
-import io.lonmstalker.springkube.model.ErrorDto
-import io.lonmstalker.springkube.model.FieldError
+import io.lonmstalker.springkube.model.system.ErrorDto
+import io.lonmstalker.springkube.model.system.FieldError
 import io.lonmstalker.springkube.utils.internal.ExceptionUtils.toError
 import jakarta.annotation.PostConstruct
 import jakarta.validation.ConstraintViolationException
