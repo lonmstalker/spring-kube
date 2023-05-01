@@ -4,6 +4,7 @@ import io.lonmstalker.springkube.dto.RegUserRequestDto
 import io.lonmstalker.springkube.dto.UserInfoDto
 import io.lonmstalker.springkube.enums.UserRole
 import io.lonmstalker.springkube.enums.UserStatus
+import io.lonmstalker.springkube.model.RegUser
 import io.lonmstalker.springkube.model.User
 import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper
@@ -29,7 +30,7 @@ interface UserMapper {
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")
     @Mapping(target = "role", expression = "java(UserRole.GROUP_ADMIN)")
     @Mapping(target = "status", expression = "java(UserStatus.ACTIVATED)")
-    fun toModel(regUser: RegUserRequestDto): User
+    fun toModel(regUser: RegUserRequestDto): RegUser
 
     @Mapping(target = "lastLogin", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
@@ -38,9 +39,12 @@ interface UserMapper {
     @Mapping(target = "role", expression = "java(UserRole.USER)")
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")
     @Mapping(target = "status", expression = "java(UserStatus.ACTIVATED)")
-    fun toModel(regUser: RegUserRequestDto, invitedBy: UUID): User
+    fun toModel(regUser: RegUserRequestDto, invitedBy: UUID): RegUser
 
-    fun toDto(user: User): UserInfoDto
+    @Mapping(source = "userGroupId",target = "userGroupId")
+    fun toUser(regUser: RegUser, userGroupId: UUID): User
+
+    fun toDto(regUser: User): UserInfoDto
 
     fun map(date: OffsetDateTime?): LocalDateTime? = date?.toLocalDateTime()
 

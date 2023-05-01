@@ -48,7 +48,13 @@ logging:
 
 app:
   properties:
+    issuer: ${AUTH_ISSUER:http://localhost:9090}
     login-page: ${LOGIN_PAGE:/login}
     failure-url: ${FAILURE_URL:/failure}
     consent-page: ${CONSENT_PAGE:/consent}
     invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg}
+    jwt:
+      location: ${JWT_LOCATION:classpath:cert/keystore.jks}
+      alias: ${JWT_ALIAS:auth-server}
+      key-pass: ${JWT_KEY_PASS:changeit}
+      key-store-pass: ${JWT_STORE_PATH:changeit}

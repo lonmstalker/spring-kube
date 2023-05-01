@@ -3,5 +3,7 @@ package io.lonmstalker.springkube.enums
 enum class UserStatus {
     ACTIVATED,
     INVITED,
-    BLOCKED
+    BLOCKED,
+    EXPIRED,
+    CREDENTIALS_EXPIRED
 }

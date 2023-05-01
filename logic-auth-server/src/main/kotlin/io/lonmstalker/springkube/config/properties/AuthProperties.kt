@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "app.properties")
 data class AuthProperties(
+    val issuer: String,
     val loginPage: String,
     val failureUrl: String,
     val inviteLink: String,

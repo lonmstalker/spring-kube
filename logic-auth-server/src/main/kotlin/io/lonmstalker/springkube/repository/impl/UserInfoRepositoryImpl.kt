@@ -1,9 +1,11 @@
 package io.lonmstalker.springkube.repository.impl
 
 import io.lonmstalker.springkube.helper.ClockHelper
+import io.lonmstalker.springkube.model.RegUser
 import io.lonmstalker.springkube.model.User
 import io.lonmstalker.springkube.repository.UserInfoRepository
 import io.lonmstalker.springkube.tables.UserTable
+import io.lonmstalker.springkube.tables.UserTable.toRegUser
 import io.lonmstalker.springkube.tables.UserTable.toUser
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -22,37 +24,37 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
 
     override fun existsUsername(username: String): Boolean = !UserTable.select { UserTable.username eq username }.empty()
 
-    override fun update(user: User, groupId: UUID): User =
+    override fun update(user: User): User =
         UserTable
             .update {
-                it[username] = getUsername(user)
+                it[username] = user.username
                 it[email] = user.email
                 it[firstName] = user.firstName
                 it[lastName] = user.lastName
                 it[status] = user.status.name
                 it[role] = user.role.name
-                it[userGroupId] = groupId
+                it[userGroupId] = user.userGroupId
                 it[lastLogin] = clockHelper.clock()
                 it[invitedBy] = user.invitedBy
                 it[currentPasswordId] = user.userPasswordId
             }
             .run { user }
 
-    override fun insert(user: User): User =
+    override fun insert(regUser: RegUser): RegUser =
         UserTable
             .insert {
-                it[id] = user.id
-                it[username] = getUsername(user)
-                it[email] = user.email
-                it[firstName] = user.firstName
-                it[lastName] = user.lastName
-                it[status] = user.status.name
-                it[role] = user.role.name
+                it[id] = regUser.id
+                it[username] = regUser.username ?: regUser.email
+                it[email] = regUser.email
+                it[firstName] = regUser.firstName
+                it[lastName] = regUser.lastName
+                it[status] = regUser.status.name
+                it[role] = regUser.role.name
                 it[createdDate] = clockHelper.clock()
-                it[invitedBy] = user.invitedBy
+                it[invitedBy] = regUser.invitedBy
             }
             .resultedValues!![0]
-            .toUser()
+            .toRegUser()
 
     private fun findBy(where: org.jetbrains.exposed.sql.SqlExpressionBuilder.() -> org.jetbrains.exposed.sql.Op<Boolean>) =
         UserTable
@@ -60,5 +62,4 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
             .firstOrNull()
             ?.toUser()
 
-    private fun getUsername(user: User) = user.username ?: user.email
 }

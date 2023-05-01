@@ -2,6 +2,7 @@ package io.lonmstalker.springkube.tables
 
 import io.lonmstalker.springkube.enums.UserRole
 import io.lonmstalker.springkube.enums.UserStatus
+import io.lonmstalker.springkube.model.RegUser
 import io.lonmstalker.springkube.model.User
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ResultRow
@@ -21,7 +22,7 @@ object UserTable : UUIDTable("user_info") {
     val currentPasswordId = reference("current_password_id", UserPasswordTable).nullable()
 
     @JvmStatic
-    fun ResultRow.toUser() = User(
+    fun ResultRow.toRegUser() = RegUser(
         id = this[id].value,
         email = this[email],
         username = this[username],
@@ -32,6 +33,22 @@ object UserTable : UUIDTable("user_info") {
         createdDate = this[createdDate],
         userGroupId = this.getOrNull(userGroupId)?.value,
         userPasswordId = this.getOrNull(currentPasswordId)?.value,
+        role = UserRole.valueOf(this[role]),
+        status = UserStatus.valueOf(this[status])
+    )
+
+    @JvmStatic
+    fun ResultRow.toUser() = User(
+        id = this[id].value,
+        email = this[email],
+        username = this[username],
+        firstName = this[firstName],
+        lastName = this[lastName],
+        invitedBy = this[invitedBy],
+        lastLogin = this[lastLogin],
+        createdDate = this[createdDate],
+        userGroupId = this[userGroupId].value,
+        userPasswordId = this[currentPasswordId]!!.value,
         role = UserRole.valueOf(this[role]),
         status = UserStatus.valueOf(this[status])
     )

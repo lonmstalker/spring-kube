@@ -13,7 +13,7 @@ import java.util.*
 @Repository
 class PasswordRepositoryImpl(private val clockHelper: ClockHelper) : PasswordRepository {
 
-    override fun findLastById(id: UUID): UserPassword? =
+    override fun findById(id: UUID): UserPassword? =
         UserPasswordTable
             .select { UserPasswordTable.id eq id }
             .firstOrNull()
