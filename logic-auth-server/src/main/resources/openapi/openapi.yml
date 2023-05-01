@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: 'Auth service'
+  version: '1.0.0'
+servers:
+  - url: '/api/v1'
+
+paths:
+  /user/reg:
+    post:
+      tags:
+        - Reg
+      summary: 'Registration'
+      operationId: 'regUser'
+      description: 'Зарегистрироваться'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegUserRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+          description: 'User information'
+  /user/reg/{id}:
+    post:
+      tags:
+        - Reg
+      parameters:
+        - $ref: '#/components/parameters/Identifier'
+      summary: 'Registration by invite'
+      operationId: 'regUserByInvite'
+      description: 'Зарегистрироваться по приглашению'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegUserRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+          description: 'User information'
+  /current-user/group:
+    get:
+      tags:
+        - CurrentUser
+      summary: 'Get user group'
+      operationId: 'findGroup'
+      description: 'Получить информацию о группе пользователя'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: 'User information'
+
+components:
+  parameters:
+    Identifier:
+      name: 'id'
+      in: path
+      required: true
+      description: 'Идентификатор в ссылке'
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    RegUserRequest:
+      required:
+        - email
+        - password
+        - firstName
+      properties:
+        username:
+          type: string
+          description: 'Никнейм пользователя(в случае отсутствия - email)'
+          example: 'IvanovIvan'
+        email:
+          type: string
+          description: 'Почта пользователя'
+          example: 'email@email.ru'
+        password:
+          type: string
+          description: 'Пароль пользователя'
+          example: 'password'
+        firstName:
+          type: string
+          description: 'Имя пользователя'
+        lastName:
+          type: string
+          description: 'Фамилия пользователя'
+    UserInfo:
+      required:
+        - email
+        - username
+        - firstName
+      properties:
+        username:
+          type: string
+          description: 'Никнейм пользователя(в случае отсутствия - email)'
+          example: 'IvanovIvan'
+        email:
+          type: string
+          description: 'Почта пользователя'
+          example: 'email@email.ru'
+        firstName:
+          type: string
+          description: 'Имя пользователя'
+          example: 'Иван'
+        lastName:
+          type: string
+          description: 'Фамилия пользователя'
+          example: 'Иванов'
+        createdDate:
+          type: string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+          description: 'Дата регистрации'
+        lastLogin:
+          type: string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+          description: 'Дата последнего входа'
+    Group:
+      required:
+        - inviteLink
+      properties:
+        title:
+          type: string
+          description: 'Название группы'
+          example: 'Группы пользователя Иванов'
+        inviteLink:
+          type: string
+          description: 'Ссылка для присоединения к группе'
+          example: 'http://localhost:8080/invite/932a20ac-1081-42a4-bbe4-902c6afc2640'
+        members:
+          type: array
+          description: 'Участники группы'
+          items:
+            $ref: '#/components/schemas/UserInfo'

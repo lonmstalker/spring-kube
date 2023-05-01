@@ -1,0 +1,51 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /auth
+
+spring:
+  application.name: auth-server
+  exposed:
+    generate-ddl: false
+  datasource:
+    url: jdbc:postgresql://${DB_URL:localhost:5432}/spring_kube_auth
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: ${MAX_SIZE:10}
+  liquibase:
+    url: jdbc:postgresql://${DB_URL:localhost:5432}/spring_kube_auth
+    user: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    change-log: db/master.yml
+  security:
+    oauth2:
+      client:
+        registration:
+          default:
+            provider: logic-auth-server
+            client-id: ${CLINT_ID:web}
+            client-secret: ${CLIENT_SECRET:webServerSecret}
+            authorization-grant-type: client_credentials, refresh_token
+            scope:
+              - READ
+              - WRITE
+        provider:
+          default:
+            issuer-uri: ${ISSUER_URI:http://localhost:9090}
+
+logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
+  level:
+    root: ${LOGGING_ROOT:error}
+    io.lonmstalker: ${LOGGING_PROJECT:info}
+
+app:
+  properties:
+    login-page: ${LOGIN_PAGE:/login}
+    failure-url: ${FAILURE_URL:/failure}
+    consent-page: ${CONSENT_PAGE:/consent}
+    invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg}

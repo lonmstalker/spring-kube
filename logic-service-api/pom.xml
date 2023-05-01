@@ -38,37 +38,6 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>${openapi.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yml</inputSpec>
-                            <modelNameSuffix>Dto</modelNameSuffix>
-                            <generatorName>kotlin-spring</generatorName>
-                            <packageName>io.lonmstalker.springkube</packageName>
-                            <apiPackage>io.lonmstalker.springkube.api</apiPackage>
-                            <generateSupportingFiles>false</generateSupportingFiles>
-                            <modelPackage>io.lonmstalker.springkube.dto</modelPackage>
-                            <output>${project.basedir}/target/generated-sources/kotlin</output>
-                            <templateDirectory>${project.basedir}/target/classes/openapi/templates</templateDirectory>
-                            <configOptions>
-                                <reactive>true</reactive>
-                                <sourceFolder>/</sourceFolder>
-                                <interfaceOnly>true</interfaceOnly>
-                                <useSpringBoot3>true</useSpringBoot3>
-                                <delegatePattern>false</delegatePattern>
-                                <gradleBuildFile>false</gradleBuildFile>
-                                <serializableModel>true</serializableModel>
-                                <skipDefaultInterface>true</skipDefaultInterface>
-                                <basePackage>io.lonmstalker.springkube</basePackage>
-                                <serializationLibrary>kotlinx_serialization</serializationLibrary>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>

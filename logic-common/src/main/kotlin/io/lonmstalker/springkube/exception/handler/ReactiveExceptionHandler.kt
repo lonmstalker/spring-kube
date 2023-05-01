@@ -44,7 +44,7 @@ class ReactiveExceptionHandler(
         response.headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
         if (ex is BaseException) {
-            return ex.writeBody(response, buildErrorDto(messageHelper.getMessageByExchange(exchange, ex)))
+            return ex.writeBody(response, buildErrorDto(messageHelper.getMessageByExchange(exchange, ex), status = 400))
         }
         if (ex is ConstraintViolationException) {
             return ex.writeBody(

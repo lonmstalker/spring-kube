@@ -19,6 +19,25 @@ services:
       - web
       - postgres
 
+  auth-server:
+    build:
+      context: ../logic-auth-server
+      dockerfile: ../logic-auth-server/Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      DB_URL: "postgres:5432"
+      DB_USER: "auth_user"
+      DB_PASSWORD: "auth_user"
+    deploy:
+      resources:
+        limits:
+          memory: 400M
+    networks:
+      - web
+      - postgres
+
   postgres:
     image: postgres:latest
     restart: always

@@ -1,5 +1,6 @@
 package io.lonmstalker.springkube.model.system
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -12,5 +13,5 @@ data class ErrorDto(
     @field:JsonProperty("status") val status: Int,
     @field:JsonProperty("message") val message: String?,
     @field:JsonProperty("data") val data: List<FieldError>?,
-    @field:JsonProperty("timestamp") val timestamp: LocalDateTime
+    @field:JsonProperty("timestamp") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss") val timestamp: LocalDateTime
 )

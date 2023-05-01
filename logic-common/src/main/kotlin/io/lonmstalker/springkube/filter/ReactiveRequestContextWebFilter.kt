@@ -10,13 +10,13 @@ import org.springframework.web.server.i18n.LocaleContextResolver
 import reactor.core.publisher.Mono
 import java.util.*
 
-class RequestContextWebFilter(
+class ReactiveRequestContextWebFilter(
     private val localeContextResolver: LocaleContextResolver
 ) : WebFilter {
 
     @PostConstruct
     fun init() {
-        LoggerFactory.getLogger(RequestContextWebFilter::class.java).info("${this::class.java} is enabled")
+        LoggerFactory.getLogger(ReactiveRequestContextWebFilter::class.java).info("${this::class.java} is enabled")
     }
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> =
