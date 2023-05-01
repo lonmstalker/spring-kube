@@ -7,7 +7,7 @@ import java.util.UUID
 data class User(
     val id: UUID = UUID.randomUUID(),
     val email: String,
-    val username: String,
+    val username: String?,
     val firstName: String,
     val lastName: String?,
     val lastLogin: java.time.LocalDateTime?,

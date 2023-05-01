@@ -30,8 +30,8 @@ object UserTable : UUIDTable("user_info") {
         invitedBy = this[invitedBy],
         lastLogin = this[lastLogin],
         createdDate = this[createdDate],
-        userGroupId = this[userGroupId].value,
-        userPasswordId = this[currentPasswordId]?.value,
+        userGroupId = this.getOrNull(userGroupId)?.value,
+        userPasswordId = this.getOrNull(currentPasswordId)?.value,
         role = UserRole.valueOf(this[role]),
         status = UserStatus.valueOf(this[status])
     )

@@ -9,11 +9,11 @@ import io.lonmstalker.springkube.repository.UserInfoRepository
 import io.lonmstalker.springkube.service.PasswordService
 import io.lonmstalker.springkube.service.UserGroupService
 import io.lonmstalker.springkube.service.UserInfoService
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional(readOnly = true)
 class UserInfoServiceImpl(
     private val passwordService: PasswordService,
     private val userGroupService: UserGroupService,
@@ -23,13 +23,14 @@ class UserInfoServiceImpl(
     @Transactional
     override fun save(user: User, password: String): User {
         this.validateLogin(user)
+        val login = user.username ?: user.email
 
         val userInfo = this.userInfoRepository.insert(user)
-        val userGroup = this.userGroupService.saveBy(user.username, userInfo.id)
-        val password = this.passwordService.save(UserPassword(userId = userInfo.id, value = password))
+        val userGroup = this.userGroupService.saveBy(login, userInfo.id)
+        val pswd = this.passwordService.save(UserPassword(userId = userInfo.id, value = password))
 
         return userInfo
-            .copy(userPasswordId = password.id)
+            .copy(userPasswordId = pswd.id, username = login)
             .let { this.userInfoRepository.update(it, userGroup.id) }
     }
 
@@ -37,7 +38,7 @@ class UserInfoServiceImpl(
         if (this.userInfoRepository.existsEmail(user.email)) {
             throw AuthException(EMAIL_EXISTS, "user with email ${user.email} already registered")
         }
-        if (this.userInfoRepository.existsUsername(user.username)) {
+        if (user.username != null && this.userInfoRepository.existsUsername(user.username)) {
             throw AuthException(USERNAME_EXISTS, "user with username ${user.username} already registered")
         }
     }

@@ -6,9 +6,11 @@ import io.lonmstalker.springkube.model.UserGroup
 import io.lonmstalker.springkube.repository.UserGroupRepository
 import io.lonmstalker.springkube.service.UserGroupService
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
+@Transactional(readOnly = true)
 class UserGroupServiceImpl(
     private val authProperties: AuthProperties,
     private val groupRepository: UserGroupRepository,
@@ -19,6 +21,7 @@ class UserGroupServiceImpl(
             .findByGroupById(id)
             ?: throw ObjectNotFoundException(id)
 
+    @Transactional
     override fun saveBy(username: String, userId: UUID): UserGroup =
         this.groupRepository
             .insert(
@@ -29,10 +32,11 @@ class UserGroupServiceImpl(
                 )
             )
 
+    @Transactional
     override fun update(userGroup: UserGroup): UserGroup =
         this.groupRepository.update(userGroup)
 
-    private fun getDefaultTitle(username: String) = "Группы пользователя $username"
+    private fun getDefaultTitle(username: String) = "Группа пользователя $username"
 
     private fun getDefaultInviteLink(userId: UUID) = this.authProperties.inviteLink + "/$userId"
 }

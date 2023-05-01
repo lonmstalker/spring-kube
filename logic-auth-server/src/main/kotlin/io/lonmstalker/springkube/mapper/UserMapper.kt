@@ -42,7 +42,7 @@ interface UserMapper {
 
     fun toDto(user: User): UserInfoDto
 
-    fun map(date: OffsetDateTime): LocalDateTime = date.toLocalDateTime()
+    fun map(date: OffsetDateTime?): LocalDateTime? = date?.toLocalDateTime()
 
-    fun map(date: LocalDateTime): OffsetDateTime = date.atOffset(ZoneOffset.UTC)
+    fun map(date: LocalDateTime?): OffsetDateTime? = date?.atOffset(ZoneOffset.UTC)
 }

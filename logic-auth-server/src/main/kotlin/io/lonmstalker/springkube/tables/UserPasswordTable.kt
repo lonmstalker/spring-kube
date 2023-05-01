@@ -18,6 +18,6 @@ object UserPasswordTable : UUIDTable("user_password") {
         userId = this[userId].value,
         value = this[value],
         type = PasswordType.valueOf(this[type]),
-        createdDate = this[UserTable.createdDate]
+        createdDate = this[createdDate]
     )
 }

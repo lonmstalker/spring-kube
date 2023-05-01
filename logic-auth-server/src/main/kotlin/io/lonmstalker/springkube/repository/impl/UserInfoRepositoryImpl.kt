@@ -25,7 +25,7 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
     override fun update(user: User, groupId: UUID): User =
         UserTable
             .update {
-                it[username] = user.username
+                it[username] = getUsername(user)
                 it[email] = user.email
                 it[firstName] = user.firstName
                 it[lastName] = user.lastName
@@ -42,7 +42,7 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
         UserTable
             .insert {
                 it[id] = user.id
-                it[username] = user.username
+                it[username] = getUsername(user)
                 it[email] = user.email
                 it[firstName] = user.firstName
                 it[lastName] = user.lastName
@@ -59,4 +59,6 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
             .select(where)
             .firstOrNull()
             ?.toUser()
+
+    private fun getUsername(user: User) = user.username ?: user.email
 }

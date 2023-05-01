@@ -16,7 +16,7 @@ object UserGroupTable : UUIDTable("user_group") {
         id = this[id].value,
         title = this[title],
         inviteLink = this[inviteLink],
-        createdDate = this[UserTable.createdDate],
+        createdDate = this[createdDate],
         createdBy = this[createdBy]
     )
 }

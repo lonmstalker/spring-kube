@@ -44,7 +44,7 @@ class ServletExceptionHandler(
 
         if (ex is BaseException) {
             this.logException(ex, false)
-            return withCode(webRequest, 400, ex.code, messageHelper.getMessage(ex))
+            return withCode(webRequest, 400, messageHelper.getMessage(ex), ex.code)
         }
         if (ex is ConstraintViolationException) {
             this.logException(ex, false)

@@ -42,6 +42,9 @@ logging:
   level:
     root: ${LOGGING_ROOT:error}
     io.lonmstalker: ${LOGGING_PROJECT:info}
+    org:
+      jdbc: ${LOGGING_SQL:error}
+      jetbrains: ${LOGGING_SQL:error}
 
 app:
   properties:

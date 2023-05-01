@@ -79,6 +79,7 @@ components:
         - email
         - password
         - firstName
+        - lastName
       properties:
         username:
           type: string
@@ -97,6 +98,7 @@ components:
           description: 'Имя пользователя'
         lastName:
           type: string
+          nullable: true
           description: 'Фамилия пользователя'
     UserInfo:
       required:
@@ -118,6 +120,7 @@ components:
           example: 'Иван'
         lastName:
           type: string
+          nullable: true
           description: 'Фамилия пользователя'
           example: 'Иванов'
         createdDate:
@@ -126,6 +129,7 @@ components:
           example: '2021-01-30T08:30:00Z'
           description: 'Дата регистрации'
         lastLogin:
+          nullable: true
           type: string
           format: date-time
           example: '2021-01-30T08:30:00Z'

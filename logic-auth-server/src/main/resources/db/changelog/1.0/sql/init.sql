@@ -11,14 +11,14 @@ CREATE TABLE user_info
     username            VARCHAR(255) UNIQUE                    NOT NULL,
     email               VARCHAR(255) UNIQUE                    NOT NULL,
     first_name          VARCHAR(255)                           NOT NULL,
-    last_name           VARCHAR(255)                           NOT NULL,
+    last_name           VARCHAR(255)                           NULL,
     status              VARCHAR(50)                            NOT NULL,
     role                VARCHAR(100)                           NOT NULL,
     current_password_id UUID                                   NULL,
     invited_by          UUID REFERENCES user_info (id)         NULL,
     user_group_id       UUID                                   NULL,
     created_date        TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    last_login          TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    last_login          TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 -- rollback drop table user_info;
 
