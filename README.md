@@ -8,10 +8,11 @@
 *Запуск logic-service*
 1. Создать бд и пользователя из [application.yml](logic-service%2Fsrc%2Fmain%2Fresources%2Fapplication.yml)
 2. Запустить logic-service
+3. Извлечь в logic-common resources/cert публичный ключ из keystore.jks: keytool -export -alias auth-server -keystore keystore.jks -file pub.pem
 
 *Запуск auth-service*
 1. Создать бд и пользователя из [application.yml](logic-auth-server%2Fsrc%2Fmain%2Fresources%2Fapplication.yml)
-2. Сгенерировать сертификат: keytool -genkey -alias auth-server -keyalg RSA -keypass changeit -storepass changeit -keystore keystore.jks ИЛИ openssl genrsa -out keypair.pem 2048
+2. Сгенерировать сертификат: keytool -genkey -alias auth-server -keyalg RSA -keypass changeit -storepass changeit -keystore keystore.jks
 3. Положить сертификат в resources/cert 
 4. Запустить auth-service
 

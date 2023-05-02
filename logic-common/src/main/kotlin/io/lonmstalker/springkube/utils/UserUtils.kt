@@ -7,5 +7,5 @@ import java.util.UUID
 object UserUtils {
 
     @JvmStatic
-    fun getUser(): UserInfo = UserInfo(UUID.randomUUID(), "", UUID.randomUUID(), setOf(), OffsetDateTime.now())
+    fun getUser(): UserInfo = UserInfo(UUID.randomUUID(), "", "", "", "", UUID.randomUUID(), OffsetDateTime.now())
 }

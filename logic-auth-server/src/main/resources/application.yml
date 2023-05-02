@@ -19,21 +19,6 @@ spring:
     user: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     change-log: db/master.yml
-  security:
-    oauth2:
-      client:
-        registration:
-          default:
-            provider: logic-auth-server
-            client-id: ${CLINT_ID:web}
-            client-secret: ${CLIENT_SECRET:webServerSecret}
-            authorization-grant-type: client_credentials, refresh_token
-            scope:
-              - READ
-              - WRITE
-        provider:
-          default:
-            issuer-uri: ${ISSUER_URI:http://localhost:9090}
 
 logging:
   charset:
@@ -48,13 +33,17 @@ logging:
 
 app:
   properties:
-    issuer: ${AUTH_ISSUER:http://localhost:9090}
-    login-page: ${LOGIN_PAGE:/login}
-    failure-url: ${FAILURE_URL:/failure}
-    consent-page: ${CONSENT_PAGE:/consent}
-    invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg}
+    auth:
+      issuer: ${AUTH_ISSUER:http://localhost:9090}
+      login-page: ${LOGIN_PAGE:/login}
+      failure-url: ${FAILURE_URL:/failure}
+      consent-page: ${CONSENT_PAGE:/consent}
+      invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg/}
     jwt:
       location: ${JWT_LOCATION:classpath:cert/keystore.jks}
       alias: ${JWT_ALIAS:auth-server}
       key-pass: ${JWT_KEY_PASS:changeit}
       key-store-pass: ${JWT_STORE_PATH:changeit}
+    token:
+      access-ttl: ${ACCESS_TTL:600}
+      refresh-ttl: ${REFRESH_TTL:172800}

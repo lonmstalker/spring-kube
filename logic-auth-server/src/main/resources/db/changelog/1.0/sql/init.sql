@@ -43,3 +43,15 @@ CREATE TABLE user_password
     type         VARCHAR(50)                            NOT NULL
 );
 -- rollback drop table user_password;
+
+-- changeset lonmstalker:create-access_token-table
+CREATE TABLE user_token
+(
+    id         UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
+    user_id    UUID REFERENCES user_info (id)         NOT NULL,
+    value      VARCHAR(500)                           NOT NULL,
+    client     VARCHAR(50)                            NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    type       VARCHAR(50)                            NOT NULL
+);
+-- rollback drop table access_token;

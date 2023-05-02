@@ -1,6 +1,6 @@
 package io.lonmstalker.springkube.controller
 
-import io.lonmstalker.springkube.api.UserApi
+import io.lonmstalker.springkube.api.RegApi
 import io.lonmstalker.springkube.dto.RegUserRequestDto
 import io.lonmstalker.springkube.dto.UserInfoDto
 import io.lonmstalker.springkube.mapper.UserMapper
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-class UserController(
+class RegController(
     private val userMapper: UserMapper,
     private val userInfoService: UserInfoService
-) : UserApi {
+) : RegApi {
 
     override fun regUser(regUser: RegUserRequestDto): UserInfoDto =
         this.userMapper.toModel(regUser)

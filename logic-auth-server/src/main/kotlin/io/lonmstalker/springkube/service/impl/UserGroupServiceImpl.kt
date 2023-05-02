@@ -1,6 +1,6 @@
 package io.lonmstalker.springkube.service.impl
 
-import io.lonmstalker.springkube.config.properties.AuthProperties
+import io.lonmstalker.springkube.config.properties.AppProperties
 import io.lonmstalker.springkube.exception.ObjectNotFoundException
 import io.lonmstalker.springkube.model.UserGroup
 import io.lonmstalker.springkube.repository.UserGroupRepository
@@ -12,9 +12,9 @@ import java.util.*
 @Service
 @Transactional(readOnly = true)
 class UserGroupServiceImpl(
-    private val authProperties: AuthProperties,
-    private val groupRepository: UserGroupRepository,
+    private val groupRepository: UserGroupRepository, appProperties: AppProperties,
 ) : UserGroupService {
+    private val inviteLink = appProperties.auth.inviteLink
 
     override fun findById(id: UUID): UserGroup =
         this.groupRepository
@@ -38,5 +38,5 @@ class UserGroupServiceImpl(
 
     private fun getDefaultTitle(username: String) = "Группа пользователя $username"
 
-    private fun getDefaultInviteLink(userId: UUID) = this.authProperties.inviteLink + "/$userId"
+    private fun getDefaultInviteLink(userId: UUID) = inviteLink + userId
 }

@@ -5,8 +5,10 @@ import java.util.UUID
 
 data class UserInfo(
     val userId: UUID,
+    val role: String,
+    val email: String,
     val username: String,
+    val firstName: String,
     val userGroupId: UUID,
-    val authorities: Set<String>,
     val loginTime: OffsetDateTime
 )

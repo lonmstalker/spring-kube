@@ -6,7 +6,7 @@ servers:
   - url: '/api/v1'
 
 paths:
-  /user/reg:
+  /public/reg:
     post:
       tags:
         - Reg
@@ -26,7 +26,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserInfo'
           description: 'User information'
-  /user/reg/{id}:
+  /public/reg/{id}:
     post:
       tags:
         - Reg
@@ -48,6 +48,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserInfo'
           description: 'User information'
+  /public/oauth/token:
+    post:
+      tags:
+        - Auth
+      summary: 'Auth by client credentials'
+      operationId: 'authenticate'
+      description: 'Авторизоваться по oauth2 client credentials flow'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+          description: 'Token information'
   /current-user/group:
     get:
       tags:
@@ -151,3 +171,46 @@ components:
           description: 'Участники группы'
           items:
             $ref: '#/components/schemas/UserInfo'
+    TokenRequest:
+      properties:
+        grant_type:
+          type: string
+          description: 'Тип получения токена'
+          example: 'client_credentials'
+        username:
+          type: string
+          description: 'Логин пользователя'
+          example: 'IvanovIvan'
+        password:
+          type: string
+          description: 'Пароль пользователя'
+          example: '123123asd3'
+    TokenResponse:
+      required:
+        - access_token
+        - token_type
+        - expires_in
+      properties:
+        access_token:
+          type: string
+          description: 'Токен доступа'
+          example: '123123asd3'
+        token_type:
+          type: string
+          description: 'Тип токена'
+          example: 'BEARER'
+        expires_in:
+          type: integer
+          format: int32
+          description: 'Время жизни токена'
+          example: '1302'
+        refresh_token:
+          type: string
+          description: 'Токен обновления'
+          example: '123123asd3'
+        scope:
+          type: array
+          items:
+            type: string
+          description: 'Разрешения(или роли)'
+          example: 'READ,WRITE'

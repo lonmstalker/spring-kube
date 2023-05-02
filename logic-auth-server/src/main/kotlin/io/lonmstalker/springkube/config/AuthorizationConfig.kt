@@ -3,8 +3,7 @@ package io.lonmstalker.springkube.config
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
-import io.lonmstalker.springkube.config.properties.AuthProperties
-import io.lonmstalker.springkube.config.properties.JwtProperties
+import io.lonmstalker.springkube.config.properties.AppProperties
 import org.apache.commons.lang3.StringUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
@@ -12,16 +11,13 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
-import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings
 import org.springframework.stereotype.Component
 import org.springframework.util.ResourceUtils
 import java.security.KeyStore
 import java.util.*
 
 @Component
-class AuthorizationConfig(
-
-) {
+class AuthorizationConfig {
 
     @Bean
     fun authenticationProvider(passwordEncoder: PasswordEncoder, userDetailsService: UserDetailsService) =
@@ -29,14 +25,8 @@ class AuthorizationConfig(
             .apply { this.setUserDetailsService(userDetailsService) }
 
     @Bean
-    fun authorizationServerSettings(authProperties: AuthProperties): AuthorizationServerSettings =
-        AuthorizationServerSettings
-            .builder()
-            .issuer(authProperties.issuer)
-            .build()
-
-    @Bean
-    fun jwtEncoder(jwtProperties: JwtProperties): NimbusJwtEncoder {
+    fun jwtEncoder(appProperties: AppProperties): NimbusJwtEncoder {
+        val jwtProperties = appProperties.jwt
         val keyPass = jwtProperties.keyPass.toCharArray()
         val storePass = jwtProperties.keyStorePass.toCharArray()
         try {
@@ -51,7 +41,7 @@ class AuthorizationConfig(
     @Bean
     fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
 
-    private fun clearJwt(jwtProperties: JwtProperties, keyPass: CharArray, storePass: CharArray) {
+    private fun clearJwt(jwtProperties: AppProperties.JwtProperties, keyPass: CharArray, storePass: CharArray) {
         jwtProperties.alias = StringUtils.EMPTY
         jwtProperties.alias = StringUtils.EMPTY
         jwtProperties.keyPass = StringUtils.EMPTY

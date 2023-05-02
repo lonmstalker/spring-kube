@@ -1,5 +1,9 @@
 spring:
   messages:
     encoding: UTF-8
-    basename: /config/errors,/config/messages,errors,messages
+    basename: /config/errors,/config/messages,/localization/errors,/localization/messages
     use-code-as-default-message: false
+
+app:
+  security:
+    public-key-path: ${PUBLIC_KEY_PATH:classpath:cert/pub.pem}
