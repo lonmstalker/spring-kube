@@ -20,6 +20,7 @@ object UserTable : UUIDTable("user_info") {
     val lastLogin = datetime("last_login").nullable() // не умеет в таймзоны
     val invitedBy = uuid("invited_by").nullable()
     val currentPasswordId = reference("current_password_id", UserPasswordTable).nullable()
+    val loginAttempts = short("login_attempts")
 
     @JvmStatic
     fun ResultRow.toRegUser() = RegUser(
@@ -50,6 +51,7 @@ object UserTable : UUIDTable("user_info") {
         userGroupId = this[userGroupId].value,
         userPasswordId = this[currentPasswordId]!!.value,
         role = UserRole.valueOf(this[role]),
-        status = UserStatus.valueOf(this[status])
+        status = UserStatus.valueOf(this[status]),
+        loginAttempts = this[loginAttempts]
     )
 }

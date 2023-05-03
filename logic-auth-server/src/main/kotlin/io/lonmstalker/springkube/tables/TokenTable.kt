@@ -4,14 +4,14 @@ import io.lonmstalker.springkube.enums.TokenType
 import io.lonmstalker.springkube.model.UserToken
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.javatime.timestamp
 
-object TokenTable : UUIDTable("user_tokens") {
-    val value = varchar("value", 500)
+object TokenTable : UUIDTable("user_token") {
+    val value = varchar("value", 1000)
     val userId = reference("user_id", UserTable)
     val type = varchar("type", 50)
     val client = varchar("client", 50)
-    val createdDate = datetime("created_date") // не умеет в таймзоны
+    val createdDate = timestamp("created_date") // не умеет в таймзоны
 
     @JvmStatic
     fun ResultRow.toToken() = UserToken(

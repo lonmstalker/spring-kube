@@ -7,6 +7,7 @@ import io.lonmstalker.springkube.constants.JwtConstants.LOGIN_TIME
 import io.lonmstalker.springkube.constants.JwtConstants.ROLE
 import io.lonmstalker.springkube.constants.JwtConstants.USER_GROUP_ID
 import io.lonmstalker.springkube.constants.JwtConstants.USER_ID
+import io.lonmstalker.springkube.constants.JwtConstants.USER_NAME
 import io.lonmstalker.springkube.enums.TokenType
 import io.lonmstalker.springkube.helper.ClockHelper
 import io.lonmstalker.springkube.model.CreateTokenSettings
@@ -24,23 +25,25 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.UUID
 
 @Service
 class TokenServiceImpl(
     private val jwtEncoder: JwtEncoder,
-    private val jwtDecoder: JwtDecoder,
+//    private val jwtDecoder: JwtDecoder,
     private val clockHelper: ClockHelper,
     private val tokenRepository: TokenRepository, appProperties: AppProperties,
 ) : TokenService {
     private val issuer = appProperties.auth.issuer
     private val tokenProperties = appProperties.token
 
-    override fun parseToken(token: String): UUID =
-        this.jwtDecoder
-            .decode(token)
-            .getClaim<String>(USER_ID)
-            .run { UUID.fromString(this) }
+    override fun parseToken(token: String): UUID = TODO()
+//        this.jwtDecoder
+//            .decode(token)
+//            .getClaim<String>(USER_ID)
+//            .run { UUID.fromString(this) }
 
     @Transactional
     override fun createToken(user: User, client: String, settings: CreateTokenSettings): UserTokenInfo {
@@ -87,19 +90,19 @@ class TokenServiceImpl(
                     userId = user.id,
                     value = this,
                     client = client,
-                    createdDate = LocalDateTime.from(issuedAt),
+                    createdDate = issuedAt,
                     type = type
                 )
             }
 
     private fun User.fillClaims(claims: MutableMap<String, Any>, type: TokenType) {
         claims[USER_ID] = this.id
-        claims[LOGIN_TIME] = this.username
+        claims[USER_NAME] = this.username
         if (type == TokenType.ACCESS) {
             claims[ROLE] = this.role
             claims[EMAIL] = this.email
             claims[FIRST_NAME] = this.firstName
-            claims[LOGIN_TIME] = this.lastLogin!!
+            claims[LOGIN_TIME] = this.lastLogin!!.toEpochSecond(ZoneOffset.UTC)
             claims[USER_GROUP_ID] = this.userGroupId
         }
     }

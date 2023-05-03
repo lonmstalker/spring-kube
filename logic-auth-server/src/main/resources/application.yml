@@ -19,6 +19,10 @@ spring:
     user: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     change-log: db/master.yml
+  security:
+    clients:
+      - client-id: web
+        client-secret: password
 
 logging:
   charset:
@@ -39,6 +43,7 @@ app:
       failure-url: ${FAILURE_URL:/failure}
       consent-page: ${CONSENT_PAGE:/consent}
       invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg/}
+      blocked-time: ${BLOCKED_TIME:30}
     jwt:
       location: ${JWT_LOCATION:classpath:cert/keystore.jks}
       alias: ${JWT_ALIAS:auth-server}
@@ -47,3 +52,4 @@ app:
     token:
       access-ttl: ${ACCESS_TTL:600}
       refresh-ttl: ${REFRESH_TTL:172800}
+      create-refresh: ${ENABLED_REFRESH:true}

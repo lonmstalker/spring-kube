@@ -15,8 +15,8 @@ import java.security.spec.X509EncodedKeySpec
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 class ServletSecurityConfig {
 
-    @Bean
-    fun jwtEncoder(@Value("\${app.security.public-key-path}") pubKeyPath: String): JwtDecoder =
+//    @Bean
+    fun jwtDecoder(@Value("\${app.security.public-key-path}") pubKeyPath: String): JwtDecoder =
         ResourceUtils
             .getFile(pubKeyPath)
             .readBytes()

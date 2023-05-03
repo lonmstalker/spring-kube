@@ -15,6 +15,7 @@ data class AppProperties(
         val failureUrl: String,
         val inviteLink: String,
         val consentPage: String,
+        val blockedTime: Long
     )
 
     data class JwtProperties(
@@ -26,6 +27,7 @@ data class AppProperties(
 
     data class TokenProperties(
         val accessTtl: Long,
-        val refreshTtl: Long
+        val refreshTtl: Long,
+        val createRefresh: Boolean
     )
 }

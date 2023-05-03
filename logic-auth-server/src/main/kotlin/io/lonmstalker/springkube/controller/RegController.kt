@@ -16,11 +16,11 @@ class RegController(
 
     override fun regUser(regUser: RegUserRequestDto): UserInfoDto =
         this.userMapper.toModel(regUser)
-            .let { this.userInfoService.save(it, regUser.password) }
+            .let { this.userInfoService.save(it, regUser.password!!) }
             .let { this.userMapper.toDto(it) }
 
     override fun regUserByInvite(id: UUID, regUser: RegUserRequestDto): UserInfoDto =
         this.userMapper.toModel(regUser, id)
-            .let { this.userInfoService.save(it, regUser.password) }
+            .let { this.userInfoService.save(it, regUser.password!!) }
             .let { this.userMapper.toDto(it) }
 }

@@ -1,7 +1,7 @@
 package io.lonmstalker.springkube.model
 
 import io.lonmstalker.springkube.enums.TokenType
-import java.time.LocalDateTime
+import java.time.Instant
 import java.util.*
 
 data class UserToken(
@@ -9,6 +9,6 @@ data class UserToken(
     val userId: UUID,
     val value: String,
     val client: String,
-    val createdDate: LocalDateTime,
+    val createdDate: Instant,
     val type: TokenType = TokenType.ACCESS,
 )

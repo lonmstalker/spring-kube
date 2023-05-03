@@ -46,7 +46,7 @@ class ReactiveSecurityConfig {
             .build()
 
     @Bean
-    fun jwtEncoder(@Value("\${app.security.public-key-path}") pubKeyPath: String): ReactiveJwtDecoder =
+    fun jwtDecoder(@Value("\${app.security.public-key-path}") pubKeyPath: String): ReactiveJwtDecoder =
         ResourceUtils
             .getFile(pubKeyPath)
             .readBytes()

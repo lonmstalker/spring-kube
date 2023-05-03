@@ -3,6 +3,8 @@ package io.lonmstalker.springkube.config
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
+import io.lonmstalker.springkube.checker.PostAuthenticationChecker
+import io.lonmstalker.springkube.checker.PreAuthenticationChecker
 import io.lonmstalker.springkube.config.properties.AppProperties
 import org.apache.commons.lang3.StringUtils
 import org.springframework.context.annotation.Bean
@@ -20,9 +22,16 @@ import java.util.*
 class AuthorizationConfig {
 
     @Bean
-    fun authenticationProvider(passwordEncoder: PasswordEncoder, userDetailsService: UserDetailsService) =
+    fun authenticationProvider(
+        passwordEncoder: PasswordEncoder,
+        userDetailsService: UserDetailsService,
+        preAuthenticationChecker: PreAuthenticationChecker,
+        postAuthenticationChecker: PostAuthenticationChecker
+    ) =
         DaoAuthenticationProvider(passwordEncoder)
             .apply { this.setUserDetailsService(userDetailsService) }
+            .apply { this.setPostAuthenticationChecks(postAuthenticationChecker) }
+            .apply { this.setPreAuthenticationChecks(preAuthenticationChecker) }
 
     @Bean
     fun jwtEncoder(appProperties: AppProperties): NimbusJwtEncoder {

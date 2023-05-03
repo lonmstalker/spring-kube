@@ -12,7 +12,7 @@
 
 *Запуск auth-service*
 1. Создать бд и пользователя из [application.yml](logic-auth-server%2Fsrc%2Fmain%2Fresources%2Fapplication.yml)
-2. Сгенерировать сертификат: keytool -genkey -alias auth-server -keyalg RSA -keypass changeit -storepass changeit -keystore keystore.jks
+2. Сгенерировать пару публичного и приватного ключей: keytool -genkey -alias auth-server -keyalg RSA -keypass changeit -storepass changeit -keystore keystore.jks
 3. Положить сертификат в resources/cert 
 4. Запустить auth-service
 
@@ -25,4 +25,3 @@
 6. Spring Boot 3.0.6 (Spring WebFlux)
 7. MapStruct
 8. OpenAPI 3.0.0
-9. Spring Oauth Authorization Server 1.0.2

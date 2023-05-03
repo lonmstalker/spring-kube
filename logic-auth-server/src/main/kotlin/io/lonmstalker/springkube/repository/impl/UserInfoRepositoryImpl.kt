@@ -9,6 +9,7 @@ import io.lonmstalker.springkube.tables.UserTable.toRegUser
 import io.lonmstalker.springkube.tables.UserTable.toUser
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -55,6 +56,18 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
             }
             .resultedValues!![0]
             .toRegUser()
+
+    override fun incrementLoginAttempts(username: String) {
+        TransactionManager
+            .current()
+            .exec("UPDATE \"user_info\" SET login_attempts = login_attempts + 1 WHERE username = $username")
+    }
+
+    override fun updateStatus(id: UUID, status: String) {
+        TransactionManager
+            .current()
+            .exec("UPDATE \"user_info\" SET status = $status + 1 WHERE id = $id")
+    }
 
     private fun findBy(where: org.jetbrains.exposed.sql.SqlExpressionBuilder.() -> org.jetbrains.exposed.sql.Op<Boolean>) =
         UserTable

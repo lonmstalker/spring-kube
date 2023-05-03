@@ -48,7 +48,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserInfo'
           description: 'User information'
-  /public/oauth/token:
+  /public/oauth2/token:
     post:
       tags:
         - Auth
@@ -58,7 +58,7 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: '#/components/schemas/TokenRequest'
       responses:
@@ -95,11 +95,6 @@ components:
         format: uuid
   schemas:
     RegUserRequest:
-      required:
-        - email
-        - password
-        - firstName
-        - lastName
       properties:
         username:
           type: string
@@ -109,16 +104,18 @@ components:
           type: string
           description: 'Почта пользователя'
           example: 'email@email.ru'
+          x-constraints: '@Email(message = "{user.email.incorrect}")'
         password:
           type: string
           description: 'Пароль пользователя'
           example: 'password'
+          x-constraints: '@Size(min = 10, max = 32,message = "{user.password.size}")'
         firstName:
           type: string
           description: 'Имя пользователя'
+          x-constraints: '@NotBlank(message = "{user.first_name.is_blank}")'
         lastName:
           type: string
-          nullable: true
           description: 'Фамилия пользователя'
     UserInfo:
       required:
@@ -172,19 +169,10 @@ components:
           items:
             $ref: '#/components/schemas/UserInfo'
     TokenRequest:
-      properties:
-        grant_type:
-          type: string
-          description: 'Тип получения токена'
-          example: 'client_credentials'
-        username:
-          type: string
-          description: 'Логин пользователя'
-          example: 'IvanovIvan'
-        password:
-          type: string
-          description: 'Пароль пользователя'
-          example: '123123asd3'
+      type: object
+      description: 'Параметры авторизации по oAuth2: https://auth0.com/docs/authenticate/protocols/oauth'
+      additionalProperties:
+        type: string
     TokenResponse:
       required:
         - access_token
@@ -201,7 +189,7 @@ components:
           example: 'BEARER'
         expires_in:
           type: integer
-          format: int32
+          format: int64
           description: 'Время жизни токена'
           example: '1302'
         refresh_token:

@@ -15,14 +15,16 @@ import java.util.*
 
 // example : https://github.com/spring-projects/spring-authorization-server/tree/main/samples/featured-authorizationserver
 @Configuration(proxyBeanMethods = false)
-class SecurityConfig(private val appProperties: AppProperties) {
+class SecurityConfig(
+    private val appProperties: AppProperties,
+    private val authenticationManager: AuthenticationManager
+) {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     fun authorizationFilterChain(
         http: HttpSecurity,
         userDetailsService: UserDetailsService,
-        authenticationManager: AuthenticationManager,
         authenticationProvider: AuthenticationProvider,
     ): SecurityFilterChain =
         http
@@ -38,10 +40,11 @@ class SecurityConfig(private val appProperties: AppProperties) {
             .and()
             .authenticationProvider(authenticationProvider)
             .userDetailsService(userDetailsService)
-            .authenticationManager(authenticationManager)
             .authorizeHttpRequests()
+            .requestMatchers("/api/v1/public/**", "/api/v1/public/*").permitAll()
+            .requestMatchers("/api/v1/current-user/**", "/api/v1/current-user/*").fullyAuthenticated()
             .anyRequest().authenticated()
-            .requestMatchers("**/public/**").permitAll()
             .and()
+            .authenticationManager(authenticationManager)
             .build()
 }
