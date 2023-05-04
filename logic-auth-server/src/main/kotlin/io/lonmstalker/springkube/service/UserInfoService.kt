@@ -8,6 +8,7 @@ import java.util.UUID
 interface UserInfoService {
     fun save(regUser: RegUser, password: String): User
     fun findByUsername(username: String): User
+    fun findById(id: UUID): User
     fun incrementLoginAttempts(username: String)
     fun updateStatus(id: UUID, status: UserStatus)
 }

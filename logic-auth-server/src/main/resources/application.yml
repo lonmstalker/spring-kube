@@ -45,7 +45,7 @@ app:
       invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg/}
       blocked-time: ${BLOCKED_TIME:30}
     jwt:
-      location: ${JWT_LOCATION:classpath:cert/keystore.jks}
+      location: ${JWT_LOCATION:classpath:cert/keystore.pfx}
       alias: ${JWT_ALIAS:auth-server}
       key-pass: ${JWT_KEY_PASS:changeit}
       key-store-pass: ${JWT_STORE_PATH:changeit}

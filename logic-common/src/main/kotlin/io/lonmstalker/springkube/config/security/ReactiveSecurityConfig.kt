@@ -2,6 +2,7 @@ package io.lonmstalker.springkube.config.security
 
 import io.lonmstalker.springkube.jwt.JwtCustomConverter
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -46,6 +47,7 @@ class ReactiveSecurityConfig {
             .build()
 
     @Bean
+    @ConditionalOnMissingBean
     fun jwtDecoder(@Value("\${app.security.public-key-path}") pubKeyPath: String): ReactiveJwtDecoder =
         ResourceUtils
             .getFile(pubKeyPath)

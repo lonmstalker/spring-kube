@@ -1,6 +1,7 @@
 package io.lonmstalker.springkube.service.impl
 
 import io.lonmstalker.springkube.constants.ErrorConstants.EMAIL_EXISTS
+import io.lonmstalker.springkube.constants.ErrorConstants.ID_NOT_EXISTS
 import io.lonmstalker.springkube.constants.ErrorConstants.USERNAME_EXISTS
 import io.lonmstalker.springkube.constants.ErrorConstants.USERNAME_NOT_EXISTS
 import io.lonmstalker.springkube.enums.UserStatus
@@ -45,6 +46,11 @@ class UserInfoServiceImpl(
         this.userInfoRepository
             .findByUsername(username)
             ?: throw AuthException(USERNAME_NOT_EXISTS, "user with username $username not found")
+
+    override fun findById(id: UUID): User =
+        this.userInfoRepository
+            .findById(id)
+            ?: throw AuthException(ID_NOT_EXISTS, "user with id $id not found")
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     override fun incrementLoginAttempts(username: String) =

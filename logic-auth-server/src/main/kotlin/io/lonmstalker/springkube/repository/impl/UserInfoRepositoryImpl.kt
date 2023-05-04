@@ -20,6 +20,7 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
     override fun findByEmail(email: String): User? = this.findBy { UserTable.email eq email }
 
     override fun findByUsername(username: String): User? = this.findBy { UserTable.username eq username }
+    override fun findById(id: UUID): User? = this.findBy { UserTable.id eq id  }
 
     override fun existsEmail(email: String): Boolean = !UserTable.select { UserTable.email eq email }.empty()
 

@@ -24,26 +24,24 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.util.UUID
+import java.util.*
 
 @Service
 class TokenServiceImpl(
     private val jwtEncoder: JwtEncoder,
-//    private val jwtDecoder: JwtDecoder,
+    private val jwtDecoder: JwtDecoder,
     private val clockHelper: ClockHelper,
     private val tokenRepository: TokenRepository, appProperties: AppProperties,
 ) : TokenService {
     private val issuer = appProperties.auth.issuer
     private val tokenProperties = appProperties.token
 
-    override fun parseToken(token: String): UUID = TODO()
-//        this.jwtDecoder
-//            .decode(token)
-//            .getClaim<String>(USER_ID)
-//            .run { UUID.fromString(this) }
+    override fun parseToken(token: String): UUID =
+        this.jwtDecoder
+            .decode(token)
+            .getClaim<String>(USER_ID)
+            .run { UUID.fromString(this) }
 
     @Transactional
     override fun createToken(user: User, client: String, settings: CreateTokenSettings): UserTokenInfo {

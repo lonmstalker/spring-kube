@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.GRANT_TYPE
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Component
 class TokenProviderImpl(
@@ -25,6 +26,8 @@ class TokenProviderImpl(
     private val provider: AuthenticationProvider, appProperties: AppProperties
 ) : TokenProvider {
     private val tokenProperties = appProperties.token
+
+    override fun getUserId(token: String): UUID = this.tokenService.parseToken(token)
 
     @Transactional
     override fun tryAuthenticate(request: Map<String, String>, client: String): UserTokenInfo? {
