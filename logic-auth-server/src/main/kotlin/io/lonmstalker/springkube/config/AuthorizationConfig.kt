@@ -3,11 +3,13 @@ package io.lonmstalker.springkube.config
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
+import io.lonmstalker.springkube.authentication.CustomAuthenticationProvider
 import io.lonmstalker.springkube.checker.PostAuthenticationChecker
 import io.lonmstalker.springkube.checker.PreAuthenticationChecker
 import io.lonmstalker.springkube.config.properties.AppProperties
 import io.lonmstalker.springkube.constants.JwtConstants.BOUNCY_CASTLE_PROVIDER_NAME
 import io.lonmstalker.springkube.constants.JwtConstants.STORE_TYPE
+import io.lonmstalker.springkube.service.UserInfoService
 import org.apache.commons.lang3.StringUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,6 +28,7 @@ class AuthorizationConfig {
 
     @Bean
     fun authenticationProvider(
+        userInfoService: UserInfoService,
         passwordEncoder: PasswordEncoder,
         userDetailsService: UserDetailsService,
         preAuthenticationChecker: PreAuthenticationChecker,
@@ -35,6 +38,7 @@ class AuthorizationConfig {
             .apply { this.setUserDetailsService(userDetailsService) }
             .apply { this.setPostAuthenticationChecks(postAuthenticationChecker) }
             .apply { this.setPreAuthenticationChecks(preAuthenticationChecker) }
+            .run { CustomAuthenticationProvider(userInfoService, this) }
 
     @Bean
     fun jwtEncoder(appProperties: AppProperties): NimbusJwtEncoder {

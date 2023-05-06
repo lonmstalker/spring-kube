@@ -25,6 +25,12 @@ class TokenRepositoryImpl : TokenRepository {
             .batchInsert(userTokens) { insert(this, it) }
     }
 
+    override fun findByValueAndType(value: String, type: String): UserToken? =
+        TokenTable
+            .select { (TokenTable.type eq type) and (TokenTable.value eq value) }
+            .firstOrNull()
+            ?.toToken()
+
     override fun findByTypeAndUserId(userId: UUID, type: TokenType): UserToken? =
         TokenTable
             .select { (TokenTable.userId eq userId) and (TokenTable.type eq type.name) }

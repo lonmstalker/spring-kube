@@ -11,10 +11,7 @@ data class AppProperties(
 
     data class AuthProperties(
         val issuer: String,
-        val loginPage: String,
-        val failureUrl: String,
         val inviteLink: String,
-        val consentPage: String,
         val blockedTime: Long
     )
 

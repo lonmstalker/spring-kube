@@ -39,9 +39,6 @@ app:
   properties:
     auth:
       issuer: ${AUTH_ISSUER:http://localhost:9090}
-      login-page: ${LOGIN_PAGE:/login}
-      failure-url: ${FAILURE_URL:/failure}
-      consent-page: ${CONSENT_PAGE:/consent}
       invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg/}
       blocked-time: ${BLOCKED_TIME:30}
     jwt:

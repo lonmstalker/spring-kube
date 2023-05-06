@@ -1,6 +1,7 @@
 package io.lonmstalker.springkube.service.impl
 
 import io.lonmstalker.springkube.config.properties.AppProperties
+import io.lonmstalker.springkube.constants.ErrorConstants.OAUTH2_TOKEN_NOT_FOUND
 import io.lonmstalker.springkube.constants.JwtConstants.EMAIL
 import io.lonmstalker.springkube.constants.JwtConstants.FIRST_NAME
 import io.lonmstalker.springkube.constants.JwtConstants.LOGIN_TIME
@@ -9,6 +10,7 @@ import io.lonmstalker.springkube.constants.JwtConstants.USER_GROUP_ID
 import io.lonmstalker.springkube.constants.JwtConstants.USER_ID
 import io.lonmstalker.springkube.constants.JwtConstants.USER_NAME
 import io.lonmstalker.springkube.enums.TokenType
+import io.lonmstalker.springkube.exception.AuthException
 import io.lonmstalker.springkube.helper.ClockHelper
 import io.lonmstalker.springkube.model.CreateTokenSettings
 import io.lonmstalker.springkube.model.User
@@ -42,6 +44,10 @@ class TokenServiceImpl(
             .decode(token)
             .getClaim<String>(USER_ID)
             .run { UUID.fromString(this) }
+
+    override fun findByValueAndType(value: String, type: TokenType): UserToken =
+        this.tokenRepository.findByValueAndType(value, type.name)
+            ?: throw AuthException(OAUTH2_TOKEN_NOT_FOUND, "token $value not found")
 
     @Transactional
     override fun createToken(user: User, client: String, settings: CreateTokenSettings): UserTokenInfo {
