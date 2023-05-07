@@ -20,6 +20,25 @@ spring:
     password: ${DB_PASSWORD:postgres}
     change-log: db/master.yml
   security:
+    oauth2:
+      client:
+        provider:
+          google:
+            user-name-attribute: sub
+            token-uri: ${GOOGLE_TOKEN_URI:https://www.googleapis.com/oauth2/v4/token}
+            user-info-uri: ${GOOGLE_INFO_URI:https://www.googleapis.com/oauth2/v3/userinfo}
+            authorization-uri: ${GOOGLE_AUTHORIZATION_URI:https://accounts.google.com/o/oauth2/v2/auth}
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:logic}
+            client-secret: ${GOOGLE_CLIENT_SECRET:logic}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${REDIRECT_URI:http://me.org:9090}/auth
+            scope:
+              - openid
+              - email
+              - profile
+
     clients:
       - client-id: web
         client-secret: password

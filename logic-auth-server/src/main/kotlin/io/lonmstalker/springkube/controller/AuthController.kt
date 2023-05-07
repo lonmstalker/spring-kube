@@ -12,4 +12,10 @@ class AuthController(
 
     override fun authenticate(requestBody: Map<String, String>): TokenResponseDto =
         this.authWebAdapter.authenticate(requestBody)
+
+    override fun authorize(requestBody: Map<String, String>) =
+        this.authWebAdapter.authorize(requestBody)
+
+    override fun login(requestBody: Map<String, String>) =
+        this.authWebAdapter.login(requestBody)
 }

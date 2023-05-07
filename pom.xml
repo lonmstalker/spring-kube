@@ -254,6 +254,10 @@
                             <basePackage>io.lonmstalker.springkube</basePackage>
                             <serializationLibrary>kotlinx_serialization</serializationLibrary>
                         </configOptions>
+                        <importMappings>
+                            <importMapping>HttpRequest=jakarta.servlet.http.HttpServletRequest</importMapping>
+                            <importMapping>HttpResponse=jakarta.servlet.http.HttpServletResponse</importMapping>
+                        </importMappings>
                     </configuration>
                 </plugin>
             </plugins>

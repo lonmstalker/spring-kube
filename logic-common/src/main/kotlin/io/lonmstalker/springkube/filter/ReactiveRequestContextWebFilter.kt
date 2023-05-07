@@ -1,6 +1,6 @@
 package io.lonmstalker.springkube.filter
 
-import io.lonmstalker.springkube.model.system.RequestContext
+import io.lonmstalker.springkube.model.system.ReactiveRequestContext
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.web.server.ServerWebExchange
@@ -21,10 +21,10 @@ class ReactiveRequestContextWebFilter(
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> =
         chain.filter(exchange)
-            .contextWrite { it.put(RequestContext::class.java, this.resolveRequestContext(exchange)) }
+            .contextWrite { it.put(ReactiveRequestContext::class.java, this.resolveRequestContext(exchange)) }
 
-    private fun resolveRequestContext(exchange: ServerWebExchange): RequestContext =
-        RequestContext(
+    private fun resolveRequestContext(exchange: ServerWebExchange): ReactiveRequestContext =
+        ReactiveRequestContext(
             this.localeContextResolver.resolveLocaleContext(exchange).locale ?: Locale.getDefault(),
             exchange
         )

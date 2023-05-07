@@ -48,13 +48,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserInfo'
           description: 'User information'
-  /public/oauth2/token:
+  /oauth2/token:
     post:
       tags:
         - Auth
       summary: 'Auth by client credentials'
       operationId: 'authenticate'
-      description: 'Авторизоваться по oauth2 client credentials flow'
+      description: 'Авторизоваться по oauth2 flow'
       requestBody:
         required: true
         content:
@@ -68,6 +68,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenResponse'
           description: 'Token information'
+  /public/oauth2/authorize:
+    get:
+      tags:
+        - Auth
+      summary: 'Authorize by authorization code flow'
+      operationId: 'authorize'
+      description: 'Начать авторизацию по oauth2 authorization code flow'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+            example: 'http://localhost:9090/auth/public/oauth2/authorize?client_id=logic&response_type=code&state=5ca75bd30&redirect_uri=http%2F%2Flocalhost%3A9090%2Fauth'
+      responses:
+        '302':
+          description: 'Redirect to oauth2 provider'
+          headers:
+            Location:
+              description: 'URI where the client can authenticate'
+              schema:
+                type: string
+                format: url
+                example: 'http://localhost:9090/auth/public/oauth2/login'
+  /public/oauth2/login:
+    post:
+      tags:
+        - Auth
+      summary: 'Login by authorization code flow'
+      operationId: 'login'
+      description: 'Авторизоваться по oauth2 authorization code flow'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '302':
+          description: 'Redirect to oauth2 provider'
+          headers:
+            Location:
+              description: 'URI where the client can authenticate'
+              schema:
+                type: string
+                format: url
+                example: 'http://localhost:9090/auth/public/oauth2/login'
   /current-user/group:
     get:
       tags:

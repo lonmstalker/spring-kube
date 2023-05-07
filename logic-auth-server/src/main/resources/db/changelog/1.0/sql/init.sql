@@ -23,6 +23,18 @@ CREATE TABLE user_info
 );
 -- rollback drop table user_info;
 
+-- changeset lonmstalker:create-user_provider_info-table
+CREATE TABLE user_provider_info
+(
+    id               UUID    DEFAULT uuid_generate_v1() PRIMARY KEY,
+    user_id          UUID REFERENCES user_info (id) NOT NULL,
+    provider         VARCHAR(100)                   NOT NULL,
+    provider_user_id VARCHAR(255)                   NOT NULL,
+    username         VARCHAR(255)                   NOT NULL,
+    enabled          BOOLEAN DEFAULT true           NOT NULL
+);
+-- rollback drop table user_provider_info;
+
 -- changeset lonmstalker:create-user_group-table
 CREATE TABLE user_group
 (
@@ -56,3 +68,7 @@ CREATE TABLE user_token
     type         VARCHAR(50)                            NOT NULL
 );
 -- rollback drop table access_token;
+
+-- changeset lonmstalker:create-idx_user_provider_info
+CREATE INDEX idx_user_provider_info ON user_provider_info (username, provider_user_id);
+-- rollback drop index idx_user_provider_info;

@@ -10,9 +10,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 object OAuth2Utils {
 
     fun Map<String, String>.toUsernamePasswordToken(): UsernamePasswordAuthenticationToken {
-        val login = this[Provider.CLIENT_CREDENTIALS.login]
+        val login = this[Provider.CLIENT_CREDENTIALS.principal]
             ?: throw exceptionOauth2BadRequest("login not found")
-        val password = this[Provider.CLIENT_CREDENTIALS.password]
+        val password = this[Provider.CLIENT_CREDENTIALS.credentials]
             ?: throw exceptionOauth2BadRequest("password not found")
         return unauthenticated(login, password)
     }

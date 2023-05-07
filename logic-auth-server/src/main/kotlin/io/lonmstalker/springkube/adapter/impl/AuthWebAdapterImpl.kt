@@ -19,6 +19,14 @@ class AuthWebAdapterImpl(
     private val tokenProviders: List<TokenProvider>
 ) : AuthWebAdapter {
 
+    override fun login(requestBody: Map<String, String>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun authorize(requestBody: Map<String, String>) {
+        TODO("Not yet implemented")
+    }
+
     override fun authenticate(requestBody: Map<String, String>): TokenResponseDto {
         val client = SecurityContextHolder.getContext().authentication.principal as String
         val grantType = this.getGrantType(requestBody)
