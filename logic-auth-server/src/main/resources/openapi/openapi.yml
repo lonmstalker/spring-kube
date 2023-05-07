@@ -6,7 +6,7 @@ servers:
   - url: '/api/v1'
 
 paths:
-  /user/reg:
+  /public/reg:
     post:
       tags:
         - Reg
@@ -26,7 +26,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserInfo'
           description: 'User information'
-  /user/reg/{id}:
+  /public/reg/{id}:
     post:
       tags:
         - Reg
@@ -48,6 +48,73 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserInfo'
           description: 'User information'
+  /oauth2/token:
+    post:
+      tags:
+        - Auth
+      summary: 'Auth by client credentials'
+      operationId: 'authenticate'
+      description: 'Авторизоваться по oauth2 flow'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+          description: 'Token information'
+  /public/oauth2/authorize:
+    get:
+      tags:
+        - Auth
+      summary: 'Authorize by authorization code flow'
+      operationId: 'authorize'
+      description: 'Начать авторизацию по oauth2 authorization code flow'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+            example: 'http://localhost:9090/auth/public/oauth2/authorize?client_id=logic&response_type=code&state=5ca75bd30&redirect_uri=http%2F%2Flocalhost%3A9090%2Fauth'
+      responses:
+        '302':
+          description: 'Redirect to oauth2 provider'
+          headers:
+            Location:
+              description: 'URI where the client can authenticate'
+              schema:
+                type: string
+                format: url
+                example: 'http://localhost:9090/auth/public/oauth2/login'
+  /public/oauth2/login:
+    post:
+      tags:
+        - Auth
+      summary: 'Login by authorization code flow'
+      operationId: 'login'
+      description: 'Авторизоваться по oauth2 authorization code flow'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '302':
+          description: 'Redirect to oauth2 provider'
+          headers:
+            Location:
+              description: 'URI where the client can authenticate'
+              schema:
+                type: string
+                format: url
+                example: 'http://localhost:9090/auth/public/oauth2/login'
   /current-user/group:
     get:
       tags:
@@ -75,11 +142,6 @@ components:
         format: uuid
   schemas:
     RegUserRequest:
-      required:
-        - email
-        - password
-        - firstName
-        - lastName
       properties:
         username:
           type: string
@@ -89,16 +151,18 @@ components:
           type: string
           description: 'Почта пользователя'
           example: 'email@email.ru'
+          x-constraints: '@Email(message = "{user.email.incorrect}")'
         password:
           type: string
           description: 'Пароль пользователя'
           example: 'password'
+          x-constraints: '@Size(min = 10, max = 32,message = "{user.password.size}")'
         firstName:
           type: string
           description: 'Имя пользователя'
+          x-constraints: '@NotBlank(message = "{user.first_name.is_blank}")'
         lastName:
           type: string
-          nullable: true
           description: 'Фамилия пользователя'
     UserInfo:
       required:
@@ -151,3 +215,37 @@ components:
           description: 'Участники группы'
           items:
             $ref: '#/components/schemas/UserInfo'
+    TokenRequest:
+      type: object
+      description: 'Параметры авторизации по oAuth2: https://auth0.com/docs/authenticate/protocols/oauth'
+      additionalProperties:
+        type: string
+    TokenResponse:
+      required:
+        - access_token
+        - token_type
+        - expires_in
+      properties:
+        access_token:
+          type: string
+          description: 'Токен доступа'
+          example: '123123asd3'
+        token_type:
+          type: string
+          description: 'Тип токена'
+          example: 'BEARER'
+        expires_in:
+          type: integer
+          format: int64
+          description: 'Время жизни токена'
+          example: '1302'
+        refresh_token:
+          type: string
+          description: 'Токен обновления'
+          example: '123123asd3'
+        scope:
+          type: array
+          items:
+            type: string
+          description: 'Разрешения(или роли)'
+          example: 'READ,WRITE'

@@ -1,6 +1,9 @@
 package io.lonmstalker.springkube.jwt
 
+import io.lonmstalker.springkube.constants.JwtConstants.EMAIL
+import io.lonmstalker.springkube.constants.JwtConstants.FIRST_NAME
 import io.lonmstalker.springkube.constants.JwtConstants.LOGIN_TIME
+import io.lonmstalker.springkube.constants.JwtConstants.ROLE
 import io.lonmstalker.springkube.constants.JwtConstants.USER_GROUP_ID
 import io.lonmstalker.springkube.constants.JwtConstants.USER_ID
 import io.lonmstalker.springkube.constants.JwtConstants.USER_NAME
@@ -20,10 +23,12 @@ class JwtCustomConverter : Converter<Jwt, Mono<AbstractAuthenticationToken>> {
 
     private fun Jwt.toUserInfo() =
         UserInfo(
-            authorities = this.audience.toSet(),
+            role = this.getClaimAsString(ROLE),
             username = this.getClaimAsString(USER_NAME),
             userId = UUID.fromString(this.getClaimAsString(USER_ID)),
             userGroupId = UUID.fromString(this.getClaimAsString(USER_GROUP_ID)),
-            loginTime = OffsetDateTime.parse(this.getClaimAsString(LOGIN_TIME))
+            loginTime = OffsetDateTime.parse(this.getClaimAsString(LOGIN_TIME)),
+            firstName = this.getClaimAsString(FIRST_NAME),
+            email = this.getClaimAsString(EMAIL)
         )
 }

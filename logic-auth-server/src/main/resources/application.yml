@@ -22,18 +22,26 @@ spring:
   security:
     oauth2:
       client:
-        registration:
-          default:
-            provider: logic-auth-server
-            client-id: ${CLINT_ID:web}
-            client-secret: ${CLIENT_SECRET:webServerSecret}
-            authorization-grant-type: client_credentials, refresh_token
-            scope:
-              - READ
-              - WRITE
         provider:
-          default:
-            issuer-uri: ${ISSUER_URI:http://localhost:9090}
+          google:
+            user-name-attribute: sub
+            token-uri: ${GOOGLE_TOKEN_URI:https://www.googleapis.com/oauth2/v4/token}
+            user-info-uri: ${GOOGLE_INFO_URI:https://www.googleapis.com/oauth2/v3/userinfo}
+            authorization-uri: ${GOOGLE_AUTHORIZATION_URI:https://accounts.google.com/o/oauth2/v2/auth}
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:logic}
+            client-secret: ${GOOGLE_CLIENT_SECRET:logic}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${REDIRECT_URI:http://me.org:9090}/auth
+            scope:
+              - openid
+              - email
+              - profile
+
+    clients:
+      - client-id: web
+        client-secret: password
 
 logging:
   charset:
@@ -48,13 +56,16 @@ logging:
 
 app:
   properties:
-    issuer: ${AUTH_ISSUER:http://localhost:9090}
-    login-page: ${LOGIN_PAGE:/login}
-    failure-url: ${FAILURE_URL:/failure}
-    consent-page: ${CONSENT_PAGE:/consent}
-    invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg}
+    auth:
+      issuer: ${AUTH_ISSUER:http://localhost:9090}
+      invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg/}
+      blocked-time: ${BLOCKED_TIME:30}
     jwt:
-      location: ${JWT_LOCATION:classpath:cert/keystore.jks}
+      location: ${JWT_LOCATION:classpath:cert/keystore.pfx}
       alias: ${JWT_ALIAS:auth-server}
       key-pass: ${JWT_KEY_PASS:changeit}
       key-store-pass: ${JWT_STORE_PATH:changeit}
+    token:
+      access-ttl: ${ACCESS_TTL:600}
+      refresh-ttl: ${REFRESH_TTL:172800}
+      create-refresh: ${ENABLED_REFRESH:true}

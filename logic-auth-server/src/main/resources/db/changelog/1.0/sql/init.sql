@@ -15,12 +15,25 @@ CREATE TABLE user_info
     status              VARCHAR(50)                            NOT NULL,
     role                VARCHAR(100)                           NOT NULL,
     current_password_id UUID                                   NULL,
+    login_attempts      SMALLINT                 DEFAULT 0     NOT NULL,
     invited_by          UUID REFERENCES user_info (id)         NULL,
     user_group_id       UUID                                   NULL,
     created_date        TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     last_login          TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 -- rollback drop table user_info;
+
+-- changeset lonmstalker:create-user_provider_info-table
+CREATE TABLE user_provider_info
+(
+    id               UUID    DEFAULT uuid_generate_v1() PRIMARY KEY,
+    user_id          UUID REFERENCES user_info (id) NOT NULL,
+    provider         VARCHAR(100)                   NOT NULL,
+    provider_user_id VARCHAR(255)                   NOT NULL,
+    username         VARCHAR(255)                   NOT NULL,
+    enabled          BOOLEAN DEFAULT true           NOT NULL
+);
+-- rollback drop table user_provider_info;
 
 -- changeset lonmstalker:create-user_group-table
 CREATE TABLE user_group
@@ -43,3 +56,19 @@ CREATE TABLE user_password
     type         VARCHAR(50)                            NOT NULL
 );
 -- rollback drop table user_password;
+
+-- changeset lonmstalker:create-access_token-table
+CREATE TABLE user_token
+(
+    id           UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
+    user_id      UUID REFERENCES user_info (id)         NOT NULL,
+    value        VARCHAR(1000)                          NOT NULL,
+    client       VARCHAR(50)                            NOT NULL,
+    created_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    type         VARCHAR(50)                            NOT NULL
+);
+-- rollback drop table access_token;
+
+-- changeset lonmstalker:create-idx_user_provider_info
+CREATE INDEX idx_user_provider_info ON user_provider_info (username, provider_user_id);
+-- rollback drop index idx_user_provider_info;

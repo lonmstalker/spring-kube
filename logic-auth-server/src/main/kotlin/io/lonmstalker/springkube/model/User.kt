@@ -15,6 +15,7 @@ data class User(
     val createdDate: java.time.LocalDateTime,
     var userGroupId: UUID,
     val userPasswordId: UUID,
+    val loginAttempts: Short,
     val role: UserRole = UserRole.USER,
     val status: UserStatus = UserStatus.ACTIVATED,
 )

@@ -1,6 +1,8 @@
 package io.lonmstalker.springkube.config.security
 
 import io.lonmstalker.springkube.jwt.JwtCustomConverter
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,7 +12,10 @@ import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.util.ResourceUtils
+import java.security.KeyFactory
 import java.security.interfaces.RSAPublicKey
+import java.security.spec.X509EncodedKeySpec
 
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
@@ -42,8 +47,11 @@ class ReactiveSecurityConfig {
             .build()
 
     @Bean
-    fun nimbusJwtDecoder(key: RSAPublicKey): ReactiveJwtDecoder =
-        NimbusReactiveJwtDecoder
-            .withPublicKey(key)
-            .build()
+    @ConditionalOnMissingBean
+    fun jwtDecoder(@Value("\${app.security.public-key-path}") pubKeyPath: String): ReactiveJwtDecoder =
+        ResourceUtils
+            .getFile(pubKeyPath)
+            .readBytes()
+            .run { KeyFactory.getInstance("RSA").generatePublic(X509EncodedKeySpec(this)) }
+            .run { NimbusReactiveJwtDecoder.withPublicKey(this as RSAPublicKey).build() }
 }

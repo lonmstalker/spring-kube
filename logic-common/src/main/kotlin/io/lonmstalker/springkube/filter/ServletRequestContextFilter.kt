@@ -1,5 +1,6 @@
 package io.lonmstalker.springkube.filter
 
+import io.lonmstalker.springkube.model.system.ServletRequestContext
 import io.lonmstalker.springkube.utils.internal.ThreadLocalStorage
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -16,8 +17,10 @@ class ServletRequestContextFilter(private val localeResolver: LocaleResolver) : 
     ) {
         try {
             ThreadLocalStorage.setLocal(this.localeResolver.resolveLocale(request))
+            ThreadLocalStorage.setCtx(ServletRequestContext(request, response))
             filterChain.doFilter(request, response)
         } finally {
+            ThreadLocalStorage.removeCtx()
             ThreadLocalStorage.removeLocal()
         }
     }

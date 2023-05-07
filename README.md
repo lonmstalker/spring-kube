@@ -8,10 +8,11 @@
 *Запуск logic-service*
 1. Создать бд и пользователя из [application.yml](logic-service%2Fsrc%2Fmain%2Fresources%2Fapplication.yml)
 2. Запустить logic-service
+3. Извлечь в logic-common resources/cert публичный ключ из keystore.pfx: keytool -export -storetype PKCS12 -alias auth-server -keystore keystore.pfx -storepass changeit -file pub.pem
 
 *Запуск auth-service*
 1. Создать бд и пользователя из [application.yml](logic-auth-server%2Fsrc%2Fmain%2Fresources%2Fapplication.yml)
-2. Сгенерировать сертификат: keytool -genkey -alias auth-server -keyalg RSA -keypass changeit -storepass changeit -keystore keystore.jks ИЛИ openssl genrsa -out keypair.pem 2048
+2. Сгенерировать пару публичного и приватного ключей: keytool -genkey -alias auth-server -storetype PKCS12 -keyalg RSA -validity 730 -keypass changeit -storepass changeit -keystore keystore.pfx
 3. Положить сертификат в resources/cert 
 4. Запустить auth-service
 
@@ -24,4 +25,3 @@
 6. Spring Boot 3.0.6 (Spring WebFlux)
 7. MapStruct
 8. OpenAPI 3.0.0
-9. Spring Oauth Authorization Server 1.0.2
