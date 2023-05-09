@@ -8,16 +8,16 @@ spring:
   exposed:
     generate-ddl: false
   datasource:
-    url: jdbc:postgresql://${DB_URL:localhost:5432}/spring_kube_auth
+    url: jdbc:postgresql://${DB_URL:localhost:5432/spring_kube_auth}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: ${MAX_SIZE:10}
   liquibase:
-    url: jdbc:postgresql://${DB_URL:localhost:5432}/spring_kube_auth
-    user: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: jdbc:postgresql://${DB_URL:localhost:5432/spring_kube_auth}
+    user: ${MIGRATION_DB_USER:postgres}
+    password: ${MIGRATION_DB_PASSWORD:postgres}
     change-log: db/master.yml
   security:
     oauth2:
@@ -72,6 +72,7 @@ app:
       issuer: ${AUTH_ISSUER:http://localhost:9090}
       invite-link: ${INVITE_LINK:http://localhost:9090/auth/api/v1/reg/}
       blocked-time: ${BLOCKED_TIME:30}
+      redirect-url: ${CODE_REDIRECT_URL:http://localhost:9090}
     jwt:
       location: ${JWT_LOCATION:classpath:cert/keystore.pfx}
       alias: ${JWT_ALIAS:auth-server}
@@ -81,3 +82,9 @@ app:
       access-ttl: ${ACCESS_TTL:600}
       refresh-ttl: ${REFRESH_TTL:172800}
       create-refresh: ${ENABLED_REFRESH:true}
+    cookie:
+      access-jwt: ${ACCESS_JWT_COOKIE:accessJwt}
+      refresh-jwt: ${REFRESH_JWT_COOKIE:refreshJwt}
+      access-max-age: ${ACCESS_JWT_MAX_AGE:580}
+      refresh-max-age: ${REFRESH_JWT_MAX_AGE:172500}
+      domain: ${COOKIE_DOMAIN:127.0.0.1}

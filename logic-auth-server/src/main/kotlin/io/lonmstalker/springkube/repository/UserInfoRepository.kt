@@ -15,6 +15,7 @@ interface UserInfoRepository {
     fun insert(regUser: RegUser): User
     fun incrementLoginAttempts(username: String)
     fun updateStatus(id: UUID, status: String)
+    fun updateLastLogin(id: UUID, loginTime: LocalDateTime): LocalDateTime
     fun lockUser(id: UUID, time: LocalDateTime)
     fun unlockUser(id: UUID)
 }

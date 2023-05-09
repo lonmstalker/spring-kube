@@ -8,9 +8,11 @@ services:
     depends_on:
       - postgres
     environment:
-      DB_URL: "postgres:5432"
+      DB_URL: "postgres:5432/spring_kube"
       DB_USER: "logic_user"
       DB_PASSWORD: "logic_user"
+      MIGRATION_DB_USER: "postgres"
+      MIGRATION_DB_PASSWORD: "postgres"
     deploy:
       resources:
         limits:
@@ -27,9 +29,11 @@ services:
     depends_on:
       - postgres
     environment:
-      DB_URL: "postgres:5432"
+      DB_URL: "postgres:5432/spring_kube_auth"
       DB_USER: "auth_user"
       DB_PASSWORD: "auth_user"
+      MIGRATION_DB_USER: "postgres"
+      MIGRATION_DB_PASSWORD: "postgres"
     deploy:
       resources:
         limits:
@@ -70,8 +74,8 @@ services:
       - postgres
     environment:
       DATA_SOURCE_URI: "postgres:5432/spring_kube?sslmode=disable"
-      DATA_SOURCE_USER: "pg_monitor"
-      DATA_SOURCE_PASS: "pg_monitor"
+      DATA_SOURCE_USER: "postgres_exporter"
+      DATA_SOURCE_PASS: "postgres_exporter"
       PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     volumes:
       - ./config/exporter-queries.yml:/etc/postgres_exporter/queries.yaml:ro

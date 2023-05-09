@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.ZoneOffset
 import java.util.*
@@ -48,6 +49,7 @@ class TokenServiceImpl(
         this.tokenRepository.findByValueAndType(value, type.name)
             ?: throw AuthException(OAUTH2_TOKEN_NOT_FOUND, "token $value not found")
 
+    @Transactional
     override fun createToken(user: User, client: String, settings: CreateTokenSettings): UserTokenInfo {
         val issuedAt = clockHelper.clockInstant()
         val accessToken = this.createToken(issuedAt, user, TokenType.ACCESS, client)

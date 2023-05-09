@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "app.properties")
 data class AppProperties(
+    val cookie: Cookie,
     val jwt: JwtProperties,
     val auth: AuthProperties,
     val token: TokenProperties
@@ -12,7 +13,8 @@ data class AppProperties(
     data class AuthProperties(
         val issuer: String,
         val inviteLink: String,
-        val blockedTime: Long
+        val blockedTime: Long,
+        val redirectUrl: String
     )
 
     data class JwtProperties(
@@ -26,5 +28,13 @@ data class AppProperties(
         val accessTtl: Long,
         val refreshTtl: Long,
         val createRefresh: Boolean
+    )
+
+    data class Cookie(
+        val accessJwt: String,
+        val refreshJwt: String,
+        val accessMaxAge: Int,
+        val refreshMaxAge: Int,
+        val domain: String
     )
 }

@@ -56,6 +56,7 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
                 it[role] = regUser.role.name
                 it[createdDate] = clockHelper.clock()
                 it[invitedBy] = regUser.invitedBy
+                it[lastLogin] = regUser.lastLogin
             }
             .resultedValues!![0]
             .toUser()
@@ -71,6 +72,12 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
             .current()
             .exec("UPDATE \"user_info\" SET status = '$status' WHERE id = '$id'")
     }
+
+    override fun updateLastLogin(id: UUID, loginTime: LocalDateTime): LocalDateTime =
+        TransactionManager
+            .current()
+            .exec("UPDATE \"user_info\" SET last_login = '$loginTime' WHERE id = '$id'")
+            .run { loginTime }
 
     override fun lockUser(id: UUID, time: LocalDateTime) {
         TransactionManager

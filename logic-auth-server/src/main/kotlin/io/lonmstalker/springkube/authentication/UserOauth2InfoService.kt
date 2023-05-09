@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
+import java.time.LocalDateTime
 
 @Component
 class UserOauth2InfoService(
@@ -40,7 +41,7 @@ class UserOauth2InfoService(
     }
 
     fun regUser(regUser: RegUser, userProvider: UserProvider): User {
-        val user = this.userInfoService.saveWithoutPassword(regUser)
+        val user = this.userInfoService.saveWithoutPassword(regUser, true)
         this.userProviderService.insert(userProvider)
         return user.first
     }
@@ -53,7 +54,9 @@ class UserOauth2InfoService(
 
     private fun checkUserEnabled(provider: UserProvider) =
         if (provider.enabled) {
-            CustomOAuth2User(provider.user!!)
+            this.userInfoService
+                .updateLastLogin(provider.userId, LocalDateTime.now())
+                .run { CustomOAuth2User(provider.user!!).also { it.user.lastLogin = this } }
         } else {
             throw AuthException(OAUTH2_PROVIDER_DISABLED, "provider for user disabled")
         }
@@ -93,7 +96,8 @@ class UserOauth2InfoService(
                 RegUser(
                     email = vkToken.email,
                     firstName = user.firstName,
-                    lastName = user.lastName
+                    lastName = user.lastName,
+                    lastLogin = LocalDateTime.now()
                 )
             }
 
@@ -113,8 +117,8 @@ class UserOauth2InfoService(
             .run { OidcProvider.valueOf(this) }
 
     companion object {
-        private const val VK_USER_IDS = "user_ids"
         private const val VK_FIELDS = "fields"
+        private const val VK_USER_IDS = "user_ids"
         private val VK_NEEDED_FIELDS = listOf("first_name", "last_name")
     }
 }

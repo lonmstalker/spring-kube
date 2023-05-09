@@ -14,9 +14,7 @@ import io.lonmstalker.springkube.repository.UserInfoRepository
 import io.lonmstalker.springkube.service.PasswordService
 import io.lonmstalker.springkube.service.UserGroupService
 import io.lonmstalker.springkube.service.UserInfoService
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.*
@@ -31,21 +29,28 @@ class UserInfoServiceImpl(
 
     @Transactional
     override fun save(regUser: RegUser, password: String): User {
-        val userGroup = this.saveWithoutPassword(regUser)
-        val pswd = this.passwordService.save(UserPassword(userId = userGroup.first.id, value = password))
+        val userWithGroup = this.saveWithoutPassword(regUser, false)
+        val pswd = this.passwordService.save(UserPassword(userId = userWithGroup.first.id, value = password))
 
-        return userGroup.first
-            .copy(userGroupId = userGroup.second.id, userPasswordId = pswd.id)
+        return userWithGroup.first
+            .apply {
+                userGroupId = userWithGroup.second.id
+                userPasswordId = pswd.id
+            }
             .let { this.userInfoRepository.update(it) }
     }
 
     @Transactional
-    override fun saveWithoutPassword(regUser: RegUser): Pair<User, UserGroup> {
+    override fun saveWithoutPassword(regUser: RegUser, updateWithGroup: Boolean): Pair<User, UserGroup> {
         this.validateLogin(regUser.username, regUser.email)
         val login = regUser.username ?: regUser.email
 
         val userInfo = this.userInfoRepository.insert(regUser.copy(username = login))
         val userGroup = this.userGroupService.saveBy(login, userInfo.id)
+
+        if (updateWithGroup) {
+            this.userInfoRepository.update(userInfo.apply { userGroupId = userGroup.id })
+        }
 
         return userInfo to userGroup
     }
@@ -67,6 +72,10 @@ class UserInfoServiceImpl(
     @Transactional
     override fun updateStatus(id: UUID, status: UserStatus) =
         this.userInfoRepository.updateStatus(id, status.name)
+
+    @Transactional
+    override fun updateLastLogin(id: UUID, loginTime: LocalDateTime): LocalDateTime =
+        this.userInfoRepository.updateLastLogin(id, loginTime)
 
     @Transactional
     override fun lockUser(id: UUID, time: LocalDateTime) =
