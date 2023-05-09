@@ -88,3 +88,6 @@ app:
       access-max-age: ${ACCESS_JWT_MAX_AGE:580}
       refresh-max-age: ${REFRESH_JWT_MAX_AGE:172500}
       domain: ${COOKIE_DOMAIN:127.0.0.1}
+
+schedule:
+  token.clear: ${TOKEN_CLEAR:0 0 0 * * *}

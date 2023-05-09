@@ -8,6 +8,7 @@ import io.lonmstalker.springkube.model.UserTokenInfo
 import java.util.*
 
 interface TokenService {
+    fun cleanExpiredTokens()
 
     /**
      * Парсит токен и возвращает идентификатор пользователя

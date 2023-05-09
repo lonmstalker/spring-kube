@@ -39,6 +39,11 @@ class TokenServiceImpl(
     private val issuer = appProperties.auth.issuer
     private val tokenProperties = appProperties.token
 
+    @Transactional
+    override fun cleanExpiredTokens() {
+        this.tokenRepository.cleanTokenExpiredAtBefore(this.clockHelper.clockInstant().plusSeconds(30))
+    }
+
     override fun parseToken(token: String): UUID =
         this.jwtDecoder
             .decode(token)
@@ -94,7 +99,7 @@ class TokenServiceImpl(
                     userId = user.id,
                     value = this,
                     client = client,
-                    createdDate = issuedAt,
+                    issuedAt = issuedAt,
                     type = type
                 )
             }

@@ -7,8 +7,10 @@ import io.lonmstalker.springkube.tables.TokenTable
 import io.lonmstalker.springkube.tables.TokenTable.toToken
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import java.util.*
 
 @Repository
@@ -41,12 +43,16 @@ class TokenRepositoryImpl : TokenRepository {
         TokenTable
             .deleteWhere { (TokenTable.userId eq userId) and (TokenTable.client eq client) }
 
+    override fun cleanTokenExpiredAtBefore(issuedAt: Instant): Int =
+        TokenTable
+            .deleteWhere { TokenTable.issuedAt lessEq issuedAt }
+
     private fun insert(body: InsertStatement<*>, userToken: UserToken) {
         body[TokenTable.id] = userToken.id
         body[TokenTable.value] = userToken.value
         body[TokenTable.userId] = userToken.userId
         body[TokenTable.client] = userToken.client
         body[TokenTable.type] = userToken.type.name
-        body[TokenTable.createdDate] = userToken.createdDate
+        body[TokenTable.issuedAt] = userToken.issuedAt
     }
 }
