@@ -1,17 +1,18 @@
 package io.lonmstalker.springkube.repository.impl
 
+import io.lonmstalker.springkube.enums.UserStatus
 import io.lonmstalker.springkube.helper.ClockHelper
 import io.lonmstalker.springkube.model.RegUser
 import io.lonmstalker.springkube.model.User
 import io.lonmstalker.springkube.repository.UserInfoRepository
 import io.lonmstalker.springkube.tables.UserTable
-import io.lonmstalker.springkube.tables.UserTable.toRegUser
 import io.lonmstalker.springkube.tables.UserTable.toUser
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 import java.util.*
 
 @Repository
@@ -20,11 +21,12 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
     override fun findByEmail(email: String): User? = this.findBy { UserTable.email eq email }
 
     override fun findByUsername(username: String): User? = this.findBy { UserTable.username eq username }
-    override fun findById(id: UUID): User? = this.findBy { UserTable.id eq id  }
+    override fun findById(id: UUID): User? = this.findBy { UserTable.id eq id }
 
     override fun existsEmail(email: String): Boolean = !UserTable.select { UserTable.email eq email }.empty()
 
-    override fun existsUsername(username: String): Boolean = !UserTable.select { UserTable.username eq username }.empty()
+    override fun existsUsername(username: String): Boolean =
+        !UserTable.select { UserTable.username eq username }.empty()
 
     override fun update(user: User): User =
         UserTable
@@ -42,7 +44,7 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
             }
             .run { user }
 
-    override fun insert(regUser: RegUser): RegUser =
+    override fun insert(regUser: RegUser): User =
         UserTable
             .insert {
                 it[id] = regUser.id
@@ -56,18 +58,30 @@ class UserInfoRepositoryImpl(private val clockHelper: ClockHelper) : UserInfoRep
                 it[invitedBy] = regUser.invitedBy
             }
             .resultedValues!![0]
-            .toRegUser()
+            .toUser()
 
     override fun incrementLoginAttempts(username: String) {
         TransactionManager
             .current()
-            .exec("UPDATE \"user_info\" SET login_attempts = login_attempts + 1 WHERE username = $username")
+            .exec("UPDATE \"user_info\" SET login_attempts = login_attempts + 1 WHERE username = '$username'")
     }
 
     override fun updateStatus(id: UUID, status: String) {
         TransactionManager
             .current()
-            .exec("UPDATE \"user_info\" SET status = $status + 1 WHERE id = $id")
+            .exec("UPDATE \"user_info\" SET status = '$status' WHERE id = '$id'")
+    }
+
+    override fun lockUser(id: UUID, time: LocalDateTime) {
+        TransactionManager
+            .current()
+            .exec("UPDATE \"user_info\" SET status = '${UserStatus.BLOCKED.name}', last_blocked = '$time' WHERE id = '$id'")
+    }
+
+    override fun unlockUser(id: UUID) {
+        TransactionManager
+            .current()
+            .exec("UPDATE \"user_info\" SET status = '${UserStatus.ACTIVATED.name}', last_blocked = null, login_attempts = 0 WHERE id = '$id'")
     }
 
     private fun findBy(where: org.jetbrains.exposed.sql.SqlExpressionBuilder.() -> org.jetbrains.exposed.sql.Op<Boolean>) =

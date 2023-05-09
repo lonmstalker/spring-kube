@@ -1,6 +1,6 @@
 package io.lonmstalker.springkube.config
 
-import io.lonmstalker.springkube.authentication.UserTokenResponseClient
+import io.lonmstalker.springkube.authentication.UserOauth2InfoService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
@@ -23,9 +23,9 @@ class SecurityConfig {
     fun authorizationFilterChain(
         http: HttpSecurity,
         userDetailsService: UserDetailsService,
+        userOauth2InfoService: UserOauth2InfoService,
         authenticationManager: AuthenticationManager,
         authenticationProvider: AuthenticationProvider,
-        userTokenResponseClient: UserTokenResponseClient
     ): SecurityFilterChain =
         http
             .cors().disable()
@@ -33,7 +33,9 @@ class SecurityConfig {
             .httpBasic()
             .and()
             .formLogin().disable()
-            .oauth2Login().tokenEndpoint().accessTokenResponseClient(userTokenResponseClient)
+            .oauth2Login()
+            .loginProcessingUrl("/login").permitAll()
+            .userInfoEndpoint().userService(userOauth2InfoService)
             .and().and()
             .exceptionHandling()
             .authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))

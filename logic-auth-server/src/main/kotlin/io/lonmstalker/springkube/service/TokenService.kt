@@ -1,7 +1,7 @@
 package io.lonmstalker.springkube.service
 
 import io.lonmstalker.springkube.enums.TokenType
-import io.lonmstalker.springkube.model.CreateTokenSettings
+import io.lonmstalker.springkube.model.system.CreateTokenSettings
 import io.lonmstalker.springkube.model.User
 import io.lonmstalker.springkube.model.UserToken
 import io.lonmstalker.springkube.model.UserTokenInfo

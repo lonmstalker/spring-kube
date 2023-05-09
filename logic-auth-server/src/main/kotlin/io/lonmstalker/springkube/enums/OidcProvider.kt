@@ -1,5 +1,6 @@
 package io.lonmstalker.springkube.enums
 
 enum class OidcProvider {
-    GOOGLE
+    GOOGLE,
+    VK
 }

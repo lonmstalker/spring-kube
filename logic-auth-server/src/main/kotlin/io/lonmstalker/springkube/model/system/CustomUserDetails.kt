@@ -1,6 +1,8 @@
-package io.lonmstalker.springkube.model
+package io.lonmstalker.springkube.model.system
 
 import io.lonmstalker.springkube.enums.UserStatus
+import io.lonmstalker.springkube.model.User
+import io.lonmstalker.springkube.model.UserPassword
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

@@ -28,20 +28,32 @@ spring:
             token-uri: ${GOOGLE_TOKEN_URI:https://www.googleapis.com/oauth2/v4/token}
             user-info-uri: ${GOOGLE_INFO_URI:https://www.googleapis.com/oauth2/v3/userinfo}
             authorization-uri: ${GOOGLE_AUTHORIZATION_URI:https://accounts.google.com/o/oauth2/v2/auth}
+          vk:
+            token-uri: ${VK_TOKEN_URI:https://oauth.vk.com/access_token}
+            user-info-uri: ${VK_USER_INFO_URI:https://api.vk.com/method/users.get}
+            authorization-uri: ${VK_AUTHORIZATION_URI:https://oauth.vk.com/authorize}
         registration:
           google:
             client-id: ${GOOGLE_CLIENT_ID:logic}
             client-secret: ${GOOGLE_CLIENT_SECRET:logic}
             authorization-grant-type: authorization_code
-            redirect-uri: ${REDIRECT_URI:http://me.org:9090}/auth
+            redirect-uri: ${REDIRECT_URI:http://localhost:9090}/auth/login
             scope:
               - openid
               - email
               - profile
+          vk:
+            client-id: ${VK_CLIENT_ID:logic}
+            client-secret: ${VK_CLIENT_SECRET:logic}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${REDIRECT_URI:http://localhost:9090}/auth/login
+            scope:
+              - email
+              - phone_number
 
     clients:
-      - client-id: web
-        client-secret: password
+      - client-id: ${WEB_CLEINT_ID:web}
+        client-secret: ${WEB_CLIENT_PASSWORD:password}
 
 logging:
   charset:

@@ -12,10 +12,10 @@ import io.lonmstalker.springkube.constants.JwtConstants.USER_NAME
 import io.lonmstalker.springkube.enums.TokenType
 import io.lonmstalker.springkube.exception.AuthException
 import io.lonmstalker.springkube.helper.ClockHelper
-import io.lonmstalker.springkube.model.CreateTokenSettings
 import io.lonmstalker.springkube.model.User
 import io.lonmstalker.springkube.model.UserToken
 import io.lonmstalker.springkube.model.UserTokenInfo
+import io.lonmstalker.springkube.model.system.CreateTokenSettings
 import io.lonmstalker.springkube.repository.TokenRepository
 import io.lonmstalker.springkube.service.TokenService
 import org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER
@@ -24,7 +24,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.ZoneOffset
 import java.util.*
@@ -49,7 +48,6 @@ class TokenServiceImpl(
         this.tokenRepository.findByValueAndType(value, type.name)
             ?: throw AuthException(OAUTH2_TOKEN_NOT_FOUND, "token $value not found")
 
-    @Transactional
     override fun createToken(user: User, client: String, settings: CreateTokenSettings): UserTokenInfo {
         val issuedAt = clockHelper.clockInstant()
         val accessToken = this.createToken(issuedAt, user, TokenType.ACCESS, client)
@@ -107,7 +105,7 @@ class TokenServiceImpl(
             claims[EMAIL] = this.email
             claims[FIRST_NAME] = this.firstName
             claims[LOGIN_TIME] = this.lastLogin!!.toEpochSecond(ZoneOffset.UTC)
-            claims[USER_GROUP_ID] = this.userGroupId
+            claims[USER_GROUP_ID] = this.userGroupId!!
         }
     }
 

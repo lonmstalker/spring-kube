@@ -16,6 +16,7 @@ CREATE TABLE user_info
     role                VARCHAR(100)                           NOT NULL,
     current_password_id UUID                                   NULL,
     login_attempts      SMALLINT                 DEFAULT 0     NOT NULL,
+    last_blocked        TIMESTAMP WITH TIME ZONE DEFAULT now() NULL,
     invited_by          UUID REFERENCES user_info (id)         NULL,
     user_group_id       UUID                                   NULL,
     created_date        TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
