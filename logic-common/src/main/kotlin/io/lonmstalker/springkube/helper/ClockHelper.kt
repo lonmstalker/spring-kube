@@ -9,8 +9,7 @@ import java.time.OffsetDateTime
 @Component
 class ClockHelper(private val clock: Clock) {
 
-    fun clock(): LocalDateTime = LocalDateTime.now(this.clock)
-
-    fun clockOffset(): OffsetDateTime = OffsetDateTime.now(this.clock)
     fun clockInstant(): Instant = this.clock.instant()
+    fun clock(): LocalDateTime = LocalDateTime.now(this.clock)
+    fun clockOffset(): OffsetDateTime = OffsetDateTime.now(this.clock)
 }
