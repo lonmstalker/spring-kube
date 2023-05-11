@@ -583,7 +583,7 @@ components:
           description: 'Поле, по которому идет сортировка'
           x-constraints: '@NotNull(message = "{request.filter.field_is_null}")'
         operation:
-          enum: [ 'EQUALS', 'NEQUALS', 'IN', 'NOT IN','BETWEEN','CONTAINS', 'OR', 'AND' ]
+          enum: [ 'equals', 'nequals', 'in', 'not in','between','contains', 'or', 'and' ]
           description: 'Тип операции'
           x-constraints: '@NotNull(message = "{request.filter.operation_is_null}")'
         value:
