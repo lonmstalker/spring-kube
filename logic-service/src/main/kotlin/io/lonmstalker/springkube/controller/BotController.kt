@@ -21,7 +21,7 @@ class BotController(
             .findById(id, UserUtils.getUser())
             .let { this.botMapper.toDto(it) }
 
-    override fun getBots(): Flow<BotDto> =
+    override fun findAll(): Flow<BotDto> =
         this.botService
             .getBots(UserUtils.getUser(), true)
             .map { this.botMapper.toDto(it) }

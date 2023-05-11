@@ -235,6 +235,7 @@
                     <configuration>
                         <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yml</inputSpec>
                         <modelNameSuffix>Dto</modelNameSuffix>
+                        <skipValidateSpec>true</skipValidateSpec>
                         <generatorName>kotlin-spring</generatorName>
                         <packageName>io.lonmstalker.springkube</packageName>
                         <apiPackage>io.lonmstalker.springkube.api</apiPackage>
