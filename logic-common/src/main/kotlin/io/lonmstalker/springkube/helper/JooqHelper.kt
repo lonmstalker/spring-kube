@@ -1,5 +1,9 @@
 package io.lonmstalker.springkube.helper
 
+import io.lonmstalker.springkube.constants.CommonConstants.FIELD
+import io.lonmstalker.springkube.constants.CommonConstants.OPERATION
+import io.lonmstalker.springkube.constants.CommonConstants.VALUE
+import io.lonmstalker.springkube.exception.DefaultException
 import io.lonmstalker.springkube.exception.SystemObjectNotFoundException
 import io.lonmstalker.springkube.model.paging.Filter
 import io.lonmstalker.springkube.model.paging.FilterRequest
@@ -11,10 +15,11 @@ import java.time.OffsetDateTime
 
 class JooqHelper(private val ctx: DSLContext) {
 
-    fun select(table: Table<*>, rq: FilterRequest) =
+    fun select(table: Table<*>, rq: FilterRequest): SelectConditionStep<out Record> =
         this.ctx
             .selectFrom(table)
             .where(rq.filters?.map { this.getField(table, it) })
+
     private fun getField(table: Table<*>, filter: Filter): Condition =
         when (filter.operation) {
             Operation.EQUALS -> table.getFieldVarchar(filter).run { this.eq(first(filter).coerce(this)) }
@@ -27,21 +32,29 @@ class JooqHelper(private val ctx: DSLContext) {
             Operation.LTE -> table.getFieldInt(filter).run { this.le(first(filter).coerce(this)) }
             Operation.LT -> table.getFieldInt(filter).run { this.lt(first(filter).coerce(this)) }
             Operation.NOT_EQUALS -> table.getFieldVarchar(filter).run { this.ne(first(filter).coerce(this)) }
-            Operation.OR -> this.or(table, filter)
-            Operation.AND -> this.and(table, filter)
+            Operation.OR -> this.reduce(table, filter) { f, s -> f.or(s) }
+            Operation.AND -> this.reduce(table, filter) { f, s -> f.and(s) }
         }
 
-    private fun or(table: Table<*>, filter: Filter): Condition =
+    private fun reduce(table: Table<*>, filter: Filter, reduce: (Condition, Condition) -> Condition): Condition =
         filter.value
-            ?.map { getField(table, it as Filter) }
-            ?.reduce { acc, condition -> acc.or(condition) }
+            ?.map { getField(table, getFilterValue(it)) }
+            ?.reduce(reduce)
             ?: throw SystemObjectNotFoundException(filter.field)
 
-    private fun and(table: Table<*>, filter: Filter): Condition =
-        filter.value
-            ?.map { getField(table, it as Filter) }
-            ?.reduce { acc, condition -> acc.and(condition) }
-            ?: throw SystemObjectNotFoundException(filter.field)
+    private fun getFilterValue(value: Any): Filter {
+        if (value is Filter) {
+            return value
+        }
+        if (value is Map<*, *>) {
+            return Filter(
+                value = value[FIELD] as? List<Any>,
+                field = value[VALUE] as String,
+                operation = Operation.values().first { it.value == OPERATION }
+            )
+        }
+        throw DefaultException("value is not filter")
+    }
 
     private fun Table<*>.getFieldInt(filter: Filter): Field<Int> =
         this.getField(filter).coerce(SQLDataType.INTEGER)
