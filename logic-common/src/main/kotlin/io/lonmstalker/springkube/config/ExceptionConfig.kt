@@ -27,6 +27,7 @@ class ExceptionConfig {
             objectMapper: ObjectMapper,
             messageHelper: ReactiveMessageHelper,
         ) = ReactiveExceptionHandler(clockHelper, objectMapper, messageHelper)
+
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)

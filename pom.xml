@@ -83,6 +83,11 @@
                 <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bcprov.version}</version>
             </dependency>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version></version>
+            </dependency>
 
             <!-- DATASOURCE -->
             <dependency>

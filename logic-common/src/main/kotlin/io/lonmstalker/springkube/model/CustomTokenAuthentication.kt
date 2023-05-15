@@ -10,4 +10,6 @@ data class CustomTokenAuthentication(
     override fun getCredentials(): Any = this.userInfo
 
     override fun getPrincipal(): Any = this.userInfo
+
+    override fun isAuthenticated(): Boolean = true
 }

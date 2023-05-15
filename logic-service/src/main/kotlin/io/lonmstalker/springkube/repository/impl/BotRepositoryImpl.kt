@@ -4,6 +4,7 @@ import io.lonmstalker.springkube.helper.ClockHelper
 import io.lonmstalker.springkube.helper.JooqHelper
 import io.lonmstalker.springkube.mapper.BotMapper
 import io.lonmstalker.springkube.model.Bot
+import io.lonmstalker.springkube.model.UserInfo
 import io.lonmstalker.springkube.model.paging.FilterRequest
 import io.lonmstalker.springkube.model.paging.PageResponse
 import io.lonmstalker.springkube.model.tables.references.BOT
@@ -38,7 +39,7 @@ class BotRepositoryImpl(
             arrayOf(BOT.USER_GROUP_ID.eq(userGroupId))
         )
 
-    override suspend fun save(bot: Bot, userId: UUID, userGroupId: UUID): Bot =
+    override suspend fun save(bot: Bot, userInfo: UserInfo): Bot =
         this.ctx
             .insertInto(
                 BOT,
@@ -58,20 +59,34 @@ class BotRepositoryImpl(
                 bot.url,
                 bot.hash,
                 bot.status,
-                userGroupId,
+                userInfo.userGroupId,
                 this.clockHelper.clockOffset(),
-                userId,
+                userInfo.userId,
                 0
             )
             .returning()
             .awaitFirst()
             .map { this.botMapper.fromRecord(it) }
 
-    override suspend fun findById(id: UUID, userId: UUID, userGroupId: UUID): Bot? =
+    override suspend fun update(bot: Bot, userInfo: UserInfo): Bot =
+        this.ctx
+            .update(BOT)
+            .set(BOT.TITLE, bot.title)
+            .set(BOT.URL, bot.url)
+            .set(BOT.HASH, bot.hash)
+            .set(BOT.STATUS, bot.status)
+            .set(BOT.VERSION, bot.version + 1)
+            .where(BOT.ID.eq(bot.id))
+            .and(BOT.CREATED_BY.eq(userInfo.userId).or(BOT.USER_GROUP_ID.eq(userInfo.userGroupId)))
+            .returning()
+            .awaitFirst()
+            .map { this.botMapper.fromRecord(it) }
+
+    override suspend fun findById(id: UUID, userInfo: UserInfo): Bot? =
         this.ctx
             .selectFrom(BOT)
             .where(BOT.ID.eq(id))
-            .and(BOT.CREATED_BY.eq(userId).or(BOT.USER_GROUP_ID.eq(userGroupId)))
+            .and(BOT.CREATED_BY.eq(userInfo.userId).or(BOT.USER_GROUP_ID.eq(userInfo.userGroupId)))
             .awaitFirstOrNull()
             ?.map { this.botMapper.fromRecord(it) }
 }

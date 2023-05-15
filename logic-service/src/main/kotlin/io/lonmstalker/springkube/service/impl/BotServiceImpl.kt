@@ -28,15 +28,15 @@ class BotServiceImpl(
 
     override suspend fun findById(id: UUID, userInfo: UserInfo): Bot =
         this.botRepository
-            .findById(id, userInfo.userId, userInfo.userGroupId)
+            .findById(id, userInfo)
             ?: throw ObjectNotFoundException(id)
 
     override suspend fun save(bot: Bot, userInfo: UserInfo): Bot =
-        this.save(bot, userInfo)
+        this.botRepository.save(bot, userInfo)
             .apply { log.debug("saved bot {} by {}", this.id, userInfo.userId) }
 
     override suspend fun update(bot: Bot, userInfo: UserInfo): Bot =
-        this.save(bot, userInfo)
+        this.botRepository.save(bot, userInfo)
             .apply { log.debug("updated bot {} by {}", this.id, userInfo.userId) }
 
     companion object {

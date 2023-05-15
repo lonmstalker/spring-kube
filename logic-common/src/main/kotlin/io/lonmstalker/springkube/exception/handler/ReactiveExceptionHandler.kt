@@ -2,6 +2,7 @@ package io.lonmstalker.springkube.exception.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.lonmstalker.springkube.constants.ErrorCodes
+import io.lonmstalker.springkube.constants.ErrorCodes.INTERNAL_SERVER_ERROR
 import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_MEDIA_TYPE
 import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_REQUEST_BODY
 import io.lonmstalker.springkube.exception.BaseException
@@ -76,20 +77,24 @@ class ReactiveExceptionHandler(
         }
 
         response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
-        return ex.writeBody(response, buildErrorDto(), true)
+        return ex.writeBody(
+            response,
+            buildErrorDto(messageHelper.getMessageByExchange(exchange, INTERNAL_SERVER_ERROR)),
+            true
+        )
     }
 
     private fun Throwable.withCode(rp: ServerHttpResponse, status: Int, message: String?, code: String?): Mono<Void> {
         rp.rawStatusCode = status
         return this.writeBody(
             rp,
-            buildErrorDto(message, code ?: ErrorCodes.INTERNAL_SERVER_ERROR, status)
+            buildErrorDto(message, code ?: INTERNAL_SERVER_ERROR, status)
         )
     }
 
     private fun buildErrorDto(
         message: String? = null,
-        code: String = ErrorCodes.INTERNAL_SERVER_ERROR,
+        code: String = INTERNAL_SERVER_ERROR,
         status: Int = HttpStatus.INTERNAL_SERVER_ERROR.value(),
         fields: List<FieldError>? = null
     ) = ErrorDto(

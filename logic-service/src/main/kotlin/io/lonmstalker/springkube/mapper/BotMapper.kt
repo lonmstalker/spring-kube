@@ -13,14 +13,16 @@ import java.util.*
 @Mapper(
     componentModel = "spring",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-    imports = [UUID::class]
+    imports = [UUID::class, BotDto.Status::class]
 )
 interface BotMapper : RecordMapper<Record, Bot> {
 
     fun fromRecord(bot: Record?): Bot
 
     @Mapping(target = "userGroupId", ignore = true)
+    @Mapping(target = "version", defaultExpression = "java(0)")
     @Mapping(target = "id", defaultExpression = "java(UUID.randomUUID())")
+    @Mapping(target = "status", defaultExpression = "java(BotDto.Status.enabled.name())")
     fun toModel(bot: BotDto): Bot
 
     fun toDto(bot: Bot): BotDto
