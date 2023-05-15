@@ -38,6 +38,6 @@ class ExceptionConfig {
             clockHelper: ClockHelper,
             objectMapper: ObjectMapper,
             servletMessageHelper: ServletMessageHelper
-        ) = ServletExceptionHandler(clockHelper, objectMapper, servletMessageHelper)
+        ) = ServletExceptionHandler(clockHelper, servletMessageHelper)
     }
 }

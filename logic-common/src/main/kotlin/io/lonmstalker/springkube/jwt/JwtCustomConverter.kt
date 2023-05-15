@@ -13,13 +13,14 @@ import org.springframework.core.convert.converter.Converter
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.oauth2.jwt.Jwt
 import reactor.core.publisher.Mono
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 
 class JwtCustomConverter : Converter<Jwt, Mono<AbstractAuthenticationToken>> {
 
     override fun convert(source: Jwt): Mono<AbstractAuthenticationToken> =
-        Mono.fromRunnable { CustomTokenAuthentication(source.toUserInfo()) }
+        Mono.just(CustomTokenAuthentication(source.toUserInfo()))
 
     private fun Jwt.toUserInfo() =
         UserInfo(
@@ -27,7 +28,7 @@ class JwtCustomConverter : Converter<Jwt, Mono<AbstractAuthenticationToken>> {
             username = this.getClaimAsString(USER_NAME),
             userId = UUID.fromString(this.getClaimAsString(USER_ID)),
             userGroupId = UUID.fromString(this.getClaimAsString(USER_GROUP_ID)),
-            loginTime = OffsetDateTime.parse(this.getClaimAsString(LOGIN_TIME)),
+            loginTime = LocalDateTime.ofInstant(this.getClaimAsInstant(LOGIN_TIME), ZoneOffset.UTC),
             firstName = this.getClaimAsString(FIRST_NAME),
             email = this.getClaimAsString(EMAIL)
         )

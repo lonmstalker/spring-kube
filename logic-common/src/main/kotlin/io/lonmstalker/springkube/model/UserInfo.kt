@@ -1,7 +1,7 @@
 package io.lonmstalker.springkube.model
 
-import java.time.OffsetDateTime
-import java.util.UUID
+import java.time.LocalDateTime
+import java.util.*
 
 data class UserInfo(
     val userId: UUID,
@@ -10,5 +10,5 @@ data class UserInfo(
     val username: String,
     val firstName: String,
     val userGroupId: UUID,
-    val loginTime: OffsetDateTime
+    val loginTime: LocalDateTime
 )

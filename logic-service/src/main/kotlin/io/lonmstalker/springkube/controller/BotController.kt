@@ -1,12 +1,13 @@
 package io.lonmstalker.springkube.controller
 
-import io.lonmstalker.springkube.utils.UserUtils
 import io.lonmstalker.springkube.api.BotApi
 import io.lonmstalker.springkube.dto.BotDto
+import io.lonmstalker.springkube.dto.FilterBotResponseDto
+import io.lonmstalker.springkube.dto.FilterRequestDto
 import io.lonmstalker.springkube.mapper.BotMapper
+import io.lonmstalker.springkube.mapper.FilterMapper
 import io.lonmstalker.springkube.service.BotService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import io.lonmstalker.springkube.utils.UserUtils.getUser
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
@@ -14,26 +15,28 @@ import java.util.*
 class BotController(
     private val botMapper: BotMapper,
     private val botService: BotService,
+    private val filterMapper: FilterMapper
 ) : BotApi {
+
+    override suspend fun findAll(filterRequestDto: FilterRequestDto): FilterBotResponseDto =
+        this.botService
+            .getBots(getUser(), this.filterMapper.toModel(filterRequestDto), true)
+            .let {
+                FilterBotResponseDto(filterMapper.toDto(it.first), it.second.map { this.botMapper.toDto(it) })
+            }
 
     override suspend fun findById(id: UUID): BotDto =
         this.botService
-            .findById(id, UserUtils.getUser())
+            .findById(id, getUser())
             .let { this.botMapper.toDto(it) }
 
-    override fun findAll(): Flow<BotDto> =
+    override suspend fun save(botDto: BotDto): BotDto =
         this.botService
-            .getBots(UserUtils.getUser(), true)
-            .map { this.botMapper.toDto(it) }
-
-    override suspend fun saveBot(bot: BotDto): BotDto =
-        this.botService
-            .save(this.botMapper.toModel(bot), UserUtils.getUser())
+            .save(this.botMapper.toModel(botDto), getUser())
             .let { this.botMapper.toDto(it) }
 
-
-    override suspend fun updateBot(bot: BotDto): BotDto =
+    override suspend fun update(botDto: BotDto): BotDto =
         this.botService
-            .update(this.botMapper.toModel(bot), UserUtils.getUser())
+            .update(this.botMapper.toModel(botDto), getUser())
             .let { this.botMapper.toDto(it) }
 }

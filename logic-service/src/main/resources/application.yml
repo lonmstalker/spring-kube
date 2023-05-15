@@ -10,6 +10,8 @@ spring:
     pool:
       max-size: ${MAX_SIZE:10}
       initial-size: ${MAX_SIZE:10}
+  webflux:
+    base-path: /core
   liquibase:
     url: jdbc:postgresql://${DB_URL:localhost:5432/spring_kube}
     user: ${MIGRATION_DB_USER:postgres}

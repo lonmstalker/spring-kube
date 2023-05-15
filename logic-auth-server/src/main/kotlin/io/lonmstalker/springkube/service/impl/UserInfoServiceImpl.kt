@@ -5,6 +5,7 @@ import io.lonmstalker.springkube.constants.ErrorConstants.ID_NOT_EXISTS
 import io.lonmstalker.springkube.constants.ErrorConstants.USERNAME_EXISTS
 import io.lonmstalker.springkube.constants.ErrorConstants.USERNAME_NOT_EXISTS
 import io.lonmstalker.springkube.enums.UserStatus
+import io.lonmstalker.springkube.exception.AuthBusinessException
 import io.lonmstalker.springkube.exception.AuthException
 import io.lonmstalker.springkube.model.RegUser
 import io.lonmstalker.springkube.model.User
@@ -87,10 +88,10 @@ class UserInfoServiceImpl(
 
     private fun validateLogin(username: String?, email: String) {
         if (this.userInfoRepository.existsEmail(email)) {
-            throw AuthException(EMAIL_EXISTS, "user with email $email already registered")
+            throw AuthBusinessException(EMAIL_EXISTS, "user with email $email already registered")
         }
         if (username != null && this.userInfoRepository.existsUsername(username)) {
-            throw AuthException(USERNAME_EXISTS, "user with username $username already registered")
+            throw AuthBusinessException(USERNAME_EXISTS, "user with username $username already registered")
         }
     }
 }

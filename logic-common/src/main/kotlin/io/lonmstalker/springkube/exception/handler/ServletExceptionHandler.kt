@@ -1,7 +1,5 @@
 package io.lonmstalker.springkube.exception.handler
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.convertValue
 import io.lonmstalker.springkube.constants.ErrorCodes
 import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_MEDIA_TYPE
 import io.lonmstalker.springkube.exception.BaseException
@@ -14,51 +12,51 @@ import jakarta.annotation.PostConstruct
 import jakarta.validation.ConstraintViolationException
 import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
-import org.springframework.boot.web.error.ErrorAttributeOptions
-import org.springframework.boot.web.servlet.error.DefaultErrorAttributes
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
+import org.springframework.core.annotation.AnnotationUtils.getAnnotation
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpMediaTypeNotSupportedException
-import org.springframework.web.context.request.WebRequest
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestControllerAdvice
 
+@RestControllerAdvice
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 class ServletExceptionHandler(
     private val clockHelper: ClockHelper,
-    private val objectMapper: ObjectMapper,
     private val messageHelper: ServletMessageHelper
-) : DefaultErrorAttributes() {
+) {
 
     @PostConstruct
     fun init() {
         log.info("${this::class.java} is enabled")
     }
 
-    override fun getErrorAttributes(webRequest: WebRequest, options: ErrorAttributeOptions): MutableMap<String, Any> {
-        val ex = super.getError(webRequest)
+    @ExceptionHandler(Throwable::class)
+    fun getErrorAttributes(ex: Throwable): ResponseEntity<ErrorDto> {
+        val status = getAnnotation(ex.javaClass, ResponseStatus::class.java)
 
-        if (ex == null) {
-            val status = this.getCode(webRequest)
-            if (status != null) {
-                setStatus(webRequest, 400)
-                return this.convertResponse(buildErrorDto(null, status = status))
-            }
+        if (status != null) {
+            val code = status.code.value()
+            return ResponseEntity.status(code).body(buildErrorDto(null, status = code))
         }
 
         if (ex is BaseException) {
             this.logException(ex, false)
-            return withCode(webRequest, 400, messageHelper.getMessage(ex), ex.code)
+            return withCode(400, messageHelper.getMessage(ex), ex.code)
         }
         if (ex is ConstraintViolationException) {
             this.logException(ex, false)
-            setStatus(webRequest, 400)
-            return this.convertResponse(buildErrorDto(ex.message, status = 400, fields = ex.toError(messageHelper)))
+            return ResponseEntity.status(400)
+                .body(buildErrorDto(ex.message, status = 400, fields = ex.toError(messageHelper)))
         }
         if (ex is ValidationException) {
             this.logException(ex, false)
-            setStatus(webRequest, 400)
-            return this.convertResponse(buildErrorDto(ex.message, status = 400))
+            return ResponseEntity.status(400).body(buildErrorDto(ex.message, status = 400))
         }
         if (ex is HttpMediaTypeNotSupportedException) {
             return withCode(
-                webRequest,
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
                 messageHelper.getMessage(INVALID_MEDIA_TYPE),
                 INVALID_MEDIA_TYPE
@@ -66,7 +64,7 @@ class ServletExceptionHandler(
         }
 
         this.logException(ex, true)
-        return this.convertResponse(buildErrorDto())
+        return ResponseEntity.internalServerError().body(buildErrorDto())
     }
 
     private fun buildErrorDto(
@@ -83,20 +81,14 @@ class ServletExceptionHandler(
     )
 
     private fun withCode(
-        webRequest: WebRequest,
         status: Int,
         message: String?,
         code: String?
-    ): MutableMap<String, Any> {
-        setStatus(webRequest, status)
-        return convertResponse(buildErrorDto(message, code ?: ErrorCodes.INTERNAL_SERVER_ERROR, status))
-    }
+    ): ResponseEntity<ErrorDto> =
+        ResponseEntity
+            .status(status)
+            .body(buildErrorDto(message, code ?: ErrorCodes.INTERNAL_SERVER_ERROR, status))
 
-    private fun setStatus(webRequest: WebRequest, status: Int) {
-        webRequest.setAttribute("javax.servlet.error.status_code", HttpStatus.valueOf(status), 0)
-    }
-
-    private fun convertResponse(body: Any) = this.objectMapper.convertValue<MutableMap<String, Any>>(body)
 
     private fun logException(ex: Throwable, isError: Boolean) {
         if (isError || log.isDebugEnabled) {
@@ -105,8 +97,6 @@ class ServletExceptionHandler(
             log.debug("catch exception: {}", ex.message)
         }
     }
-
-    private fun getCode(webRequest: WebRequest): Int? = webRequest.getAttribute("jakarta.servlet.error.status_code", 0) as? Int
 
     companion object {
         @JvmStatic

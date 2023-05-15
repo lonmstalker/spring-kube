@@ -12,5 +12,9 @@ enum class Operation(val value: String) {
     LTE("lte"),
     LT("lt"),
     OR("or"),
-    AND("and")
+    AND("and");
+
+    companion object {
+        val VALUES_MAP: Map<String, Operation> = values().associateBy { it.value }
+    }
 }

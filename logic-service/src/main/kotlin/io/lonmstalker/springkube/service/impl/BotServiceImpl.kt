@@ -3,6 +3,8 @@ package io.lonmstalker.springkube.service.impl
 import io.lonmstalker.springkube.exception.ObjectNotFoundException
 import io.lonmstalker.springkube.model.Bot
 import io.lonmstalker.springkube.model.UserInfo
+import io.lonmstalker.springkube.model.paging.FilterRequest
+import io.lonmstalker.springkube.model.paging.PageResponse
 import io.lonmstalker.springkube.repository.BotRepository
 import io.lonmstalker.springkube.service.BotService
 import kotlinx.coroutines.flow.Flow
@@ -15,11 +17,13 @@ class BotServiceImpl(
     private val botRepository: BotRepository
 ) : BotService {
 
-    override fun getBots(userInfo: UserInfo, onlyCurrentUser: Boolean): Flow<Bot> =
+    override suspend fun getBots(
+        userInfo: UserInfo, request: FilterRequest, onlyCurrentUser: Boolean
+    ): Pair<PageResponse, List<Bot>> =
         if (onlyCurrentUser) {
-            this.botRepository.findBots(userInfo.userId)
+            this.botRepository.findBots(userInfo.userId, request)
         } else {
-            this.botRepository.findByUserGroup(userInfo.userGroupId)
+            this.botRepository.findByUserGroup(userInfo.userGroupId, request)
         }
 
     override suspend fun findById(id: UUID, userInfo: UserInfo): Bot =

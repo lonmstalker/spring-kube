@@ -8,12 +8,33 @@ import io.lonmstalker.springkube.exception.SystemObjectNotFoundException
 import io.lonmstalker.springkube.model.paging.Filter
 import io.lonmstalker.springkube.model.paging.FilterRequest
 import io.lonmstalker.springkube.model.paging.Operation
+import io.lonmstalker.springkube.model.paging.PageResponse
+import kotlinx.coroutines.reactive.awaitFirst
 import org.jooq.*
 import org.jooq.impl.DSL
 import org.jooq.impl.SQLDataType
+import reactor.core.publisher.Flux
 import java.time.OffsetDateTime
 
 class JooqHelper(private val ctx: DSLContext) {
+
+    suspend fun <T> selectFluxWithCount(
+        table: Table<*>,
+        rq: FilterRequest,
+        transformation: (Record) -> T,
+        additionalFilters: Array<Condition>?
+    ): Pair<PageResponse, List<T>> {
+        val filters = rq.filters?.mapTo(mutableListOf()) { getField(table, it) } ?: mutableListOf()
+
+        if (additionalFilters != null) {
+            filters.addAll(additionalFilters)
+        }
+
+        val count = ctx.selectCount().from(table).where(filters).awaitFirst().get(0, Int::class.java)
+        val data = Flux.from(ctx.selectFrom(table)).collectList().awaitFirst().map(transformation)
+
+        return PageResponse(page = if (data.isNotEmpty()) rq.paging?.page ?: 0 else 0, totalCount = count) to data
+    }
 
     fun select(table: Table<*>, rq: FilterRequest): SelectConditionStep<out Record> =
         this.ctx
