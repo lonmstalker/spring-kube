@@ -4,11 +4,10 @@ import io.lonmstalker.springkube.model.UserProvider
 import io.lonmstalker.springkube.repository.UserProviderRepository
 import io.lonmstalker.springkube.tables.UserProviderTable
 import io.lonmstalker.springkube.tables.UserProviderTable.toProvider
+import io.lonmstalker.springkube.tables.UserProviderTable.toProviderWithUser
+import io.lonmstalker.springkube.tables.UserTable
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -30,9 +29,10 @@ class UserProviderRepositoryImpl : UserProviderRepository {
 
     override fun findByProviderAndProviderUserId(providerUserId: String, userProvider: String): UserProvider? =
         UserProviderTable
+            .join(UserTable, JoinType.INNER) { UserProviderTable.userId eq UserTable.id }
             .select { (UserProviderTable.providerUserId eq providerUserId) and (UserProviderTable.provider eq userProvider) }
             .firstOrNull()
-            ?.toProvider()
+            ?.toProviderWithUser()
 
     override fun delete(userId: UUID, userProvider: String): Int =
         UserProviderTable

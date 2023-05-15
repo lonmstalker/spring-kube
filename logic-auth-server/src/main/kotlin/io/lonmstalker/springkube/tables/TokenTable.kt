@@ -11,7 +11,7 @@ object TokenTable : UUIDTable("user_token") {
     val userId = reference("user_id", UserTable)
     val type = varchar("type", 50)
     val client = varchar("client", 50)
-    val createdDate = timestamp("created_date") // не умеет в таймзоны
+    val issuedAt = timestamp("issued_at") // не умеет в таймзоны
 
     @JvmStatic
     fun ResultRow.toToken() = UserToken(
@@ -19,7 +19,7 @@ object TokenTable : UUIDTable("user_token") {
         userId = this[userId].value,
         value = this[value],
         type = TokenType.valueOf(this[type]),
-        createdDate = this[createdDate],
+        issuedAt = this[issuedAt],
         client = this[client]
     )
 }

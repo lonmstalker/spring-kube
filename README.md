@@ -16,6 +16,10 @@
 3. Положить сертификат в resources/cert 
 4. Запустить auth-service
 
+*Запуск сервисов в докере*
+1. Выолнить локалькую сборку
+2. Запустить [docker-compose.yml](infrastructure%2Fdocker-compose.yml)
+
 *Стек*
 1. Kotlin 1.7.22
 2. Java 17

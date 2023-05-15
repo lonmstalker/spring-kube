@@ -5,7 +5,7 @@ import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 
-class CustomAuthenticationProvider(
+open class CustomAuthenticationProvider(
     private val userInfoService: UserInfoService,
     private val delegateAuthenticationProvider: AuthenticationProvider
 ) : AuthenticationProvider {

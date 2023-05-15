@@ -9,6 +9,6 @@ data class UserToken(
     val userId: UUID,
     val value: String,
     val client: String,
-    val createdDate: Instant,
+    val issuedAt: Instant,
     val type: TokenType = TokenType.ACCESS,
 )

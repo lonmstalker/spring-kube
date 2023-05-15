@@ -16,6 +16,7 @@ CREATE TABLE user_info
     role                VARCHAR(100)                           NOT NULL,
     current_password_id UUID                                   NULL,
     login_attempts      SMALLINT                 DEFAULT 0     NOT NULL,
+    last_blocked        TIMESTAMP WITH TIME ZONE DEFAULT now() NULL,
     invited_by          UUID REFERENCES user_info (id)         NULL,
     user_group_id       UUID                                   NULL,
     created_date        TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
@@ -60,12 +61,12 @@ CREATE TABLE user_password
 -- changeset lonmstalker:create-access_token-table
 CREATE TABLE user_token
 (
-    id           UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
-    user_id      UUID REFERENCES user_info (id)         NOT NULL,
-    value        VARCHAR(1000)                          NOT NULL,
-    client       VARCHAR(50)                            NOT NULL,
-    created_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    type         VARCHAR(50)                            NOT NULL
+    id        UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
+    user_id   UUID REFERENCES user_info (id)         NOT NULL,
+    value     VARCHAR(1000)                          NOT NULL,
+    client    VARCHAR(50)                            NOT NULL,
+    issued_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    type      VARCHAR(50)                            NOT NULL
 );
 -- rollback drop table access_token;
 

@@ -18,6 +18,7 @@
     <properties>
         <java.version>17</java.version>
         <kotlin.version>1.7.22</kotlin.version>
+        <kotlin.code.style>official</kotlin.code.style>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
@@ -121,7 +122,7 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <sourceDirectory>${project.basedir}/src/main/kotlin/</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <pluginManagement>
             <plugins>
@@ -234,6 +235,7 @@
                     <configuration>
                         <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yml</inputSpec>
                         <modelNameSuffix>Dto</modelNameSuffix>
+                        <skipValidateSpec>true</skipValidateSpec>
                         <generatorName>kotlin-spring</generatorName>
                         <packageName>io.lonmstalker.springkube</packageName>
                         <apiPackage>io.lonmstalker.springkube.api</apiPackage>
@@ -258,6 +260,15 @@
                             <importMapping>HttpRequest=jakarta.servlet.http.HttpServletRequest</importMapping>
                             <importMapping>HttpResponse=jakarta.servlet.http.HttpServletResponse</importMapping>
                         </importMappings>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <layers>
+                            <enabled>true</enabled>
+                        </layers>
                     </configuration>
                 </plugin>
             </plugins>

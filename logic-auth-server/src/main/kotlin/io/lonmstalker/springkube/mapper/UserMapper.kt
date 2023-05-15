@@ -41,10 +41,6 @@ interface UserMapper {
     @Mapping(target = "status", expression = "java(UserStatus.ACTIVATED)")
     fun toModel(regUser: RegUserRequestDto, invitedBy: UUID): RegUser
 
-    @Mapping(target = "loginAttempts", ignore = true)
-    @Mapping(source = "userGroupId",target = "userGroupId")
-    fun toUser(regUser: RegUser, userGroupId: UUID): User
-
     fun toDto(regUser: User): UserInfoDto
 
     fun map(date: OffsetDateTime?): LocalDateTime? = date?.toLocalDateTime()

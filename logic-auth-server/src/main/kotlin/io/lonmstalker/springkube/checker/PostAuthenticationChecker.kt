@@ -1,7 +1,7 @@
 package io.lonmstalker.springkube.checker
 
 import io.lonmstalker.springkube.enums.UserStatus
-import io.lonmstalker.springkube.model.CustomUserDetails
+import io.lonmstalker.springkube.model.system.CustomUserDetails
 import io.lonmstalker.springkube.service.UserInfoService
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsChecker

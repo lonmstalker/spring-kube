@@ -6,6 +6,8 @@ servers:
   - url: '/api/v1'
 
 paths:
+
+  ############# bot
   /bot/{id}:
     get:
       summary: 'Get bot by id'
@@ -23,10 +25,16 @@ paths:
                 $ref: '#/components/schemas/Bot'
           description: 'Bot information'
   /bot/list:
-    get:
-      summary: 'Get bots'
-      operationId: 'getBots'
+    post:
+      summary: 'Get all'
+      operationId: 'findAll'
       description: 'Получить информацию о ботах группы'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
       tags:
         - Bot
       responses:
@@ -34,13 +42,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bots'
+                $ref: '#/components/schemas/FilterBotResponse'
           description: 'Array of Bot information'
   /current-user/bot/list:
-    get:
-      summary: 'Get bots by group'
-      operationId: 'getBotsByGroup'
+    post:
+      summary: 'Get bots by current USER'
+      operationId: 'getBotsByCurrentUser'
       description: 'Получить информацию о своих ботах'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
       tags:
         - CurrentUser
       responses:
@@ -48,12 +62,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bots'
+                $ref: '#/components/schemas/FilterBotResponse'
           description: 'Array of Bot information'
   /bot:
     post:
       summary: 'Save bot'
-      operationId: 'saveBot'
+      operationId: 'save'
       description: 'Сохранить бота'
       tags:
         - Bot
@@ -72,7 +86,7 @@ paths:
           description: 'Bot information'
     put:
       summary: 'Update bot'
-      operationId: 'updateBot'
+      operationId: 'update'
       description: 'Обновить бота'
       tags:
         - Bot
@@ -90,6 +104,244 @@ paths:
                 $ref: '#/components/schemas/Bot'
           description: 'Bot information'
 
+  ############# bot action
+  /bot-action/{id}:
+    get:
+      summary: 'Get bot action by id'
+      operationId: 'findById'
+      description: 'Получить действие по идентификатору'
+      tags:
+        - BotAction
+      parameters:
+        - $ref: '#/components/parameters/Identifier'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotAction'
+          description: 'Bot action information'
+  /bot-action/list:
+    post:
+      summary: 'Get all'
+      operationId: 'findAll'
+      description: 'Получить информацию о действиях группы'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
+      tags:
+        - BotAction
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterBotActionResponse'
+          description: 'Array of Bot action information'
+  /current-user/bot-action/list:
+    post:
+      summary: 'Get bot action by group'
+      operationId: 'getBotActionsByCurrentUser'
+      description: 'Получить информацию о своих действиях'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
+      tags:
+        - CurrentUser
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterBotActionResponse'
+          description: 'Array of Bot action information'
+  /bot-action:
+    post:
+      summary: 'Save bot action'
+      operationId: 'save'
+      description: 'Сохранить действие'
+      tags:
+        - BotAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BotAction'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotAction'
+          description: 'Bot information'
+    put:
+      summary: 'Update bot'
+      operationId: 'update'
+      description: 'Обновить действие'
+      tags:
+        - BotAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BotAction'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotAction'
+          description: 'Bot action information'
+
+  ############# bot position info
+  /bot-position/{id}:
+    get:
+      summary: 'Get bot position by id'
+      operationId: 'findById'
+      description: 'Получить позицию по идентификатору'
+      tags:
+        - BotPosition
+      parameters:
+        - $ref: '#/components/parameters/Identifier'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotPositionInfo'
+          description: 'Bot position information'
+  /bot-position/list:
+    post:
+      summary: 'Get all'
+      operationId: 'findAll'
+      description: 'Получить информацию о позициях группы'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
+      tags:
+        - BotPosition
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterBotPositionInfoResponse'
+          description: 'Array of Bot position information'
+  /current-user/bot-position/list:
+    post:
+      summary: 'Get bot position by group'
+      operationId: 'getPositionsByCurrentUser'
+      description: 'Получить информацию о своих позициях'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
+      tags:
+        - CurrentUser
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterBotPositionInfoResponse'
+          description: 'Array of Bot position information'
+  /bot-position:
+    post:
+      summary: 'Save bot position'
+      operationId: 'save'
+      description: 'Сохранить позицию'
+      tags:
+        - BotPosition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BotPositionInfo'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotPositionInfo'
+          description: 'Bot position information'
+    put:
+      summary: 'Update bot'
+      operationId: 'update'
+      description: 'Обновить позицию'
+      tags:
+        - BotPosition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BotPositionInfo'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotPositionInfo'
+          description: 'Bot position information'
+
+  ############# bot audit
+  /audit/list:
+    post:
+      summary: 'Get all'
+      operationId: 'findAll'
+      description: 'Получить аудит по ботам'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
+      tags:
+        - BotPosition
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterBotActionAuditResponse'
+          description: 'Array of Bot audit information'
+
+  ############# user info
+  /users/list:
+    post:
+      summary: 'Get all'
+      operationId: 'findAll'
+      description: 'Получить инфо пользователей ботов'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
+      tags:
+        - BotPosition
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterBotUserInfoResponse'
+          description: 'Array of Bot user info information'
+
 components:
   parameters:
     Identifier:
@@ -101,15 +353,7 @@ components:
         type: string
         format: uuid
   schemas:
-    Bots:
-      type: array
-      items:
-        $ref: '#/components/schemas/Bot'
     Bot:
-      required:
-        - title
-        - url
-        - hash
       properties:
         id:
           type: string
@@ -118,15 +362,18 @@ components:
         title:
           type: string
           description: 'Название бота'
+          x-constraints: '@NotBlank(message = "{bot.title.is_blank}")'
         url:
           type: string
           description: 'Ссылка на бота'
+          x-constraints: '@NotBlank(message = "{bot.url.is_blank}")'
         hash:
           type: string
           description: 'Хеш для подключения к боту'
+          x-constraints: '@NotBlank(message = "{bot.hash.is_blank}")'
         status:
           type: string
-          enum: ['enabled', 'disabled', 'blocked']
+          enum: [ 'enabled', 'disabled', 'blocked' ]
           description: 'Статус работоспособности бота'
         createdBy:
           type: string
@@ -141,3 +388,281 @@ components:
           type: integer
           format: i32
           description: 'Версия бота'
+    BotPositionInfo:
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'Идентификатор позиции в боте'
+        botId:
+          type: string
+          format: uuid
+          description: 'Идентификатор бота, для которого создана позиция'
+          x-constraints: '@NotBlank(message = "{bot_position.bot_id.is_blank}")'
+        actionId:
+          type: string
+          format: uuid
+          description: 'Идентификатор действия, происходящего при назначении события'
+          x-constraints: '@NotBlank(message = "{bot_position.action_id.is_blank}")'
+        fromPosition:
+          type: string
+          description: 'Позиция, для которой срабатывает действие'
+          x-constraints: '@NotBlank(message = "{bot_position.from_position.is_blank}")'
+        toPosition:
+          type: string
+          description: 'Позиция, в которую перейдет пользователь, иначе останется старая позиция'
+        locale:
+          type: string
+          default: 'ru'
+          description: 'Локализация позиции'
+        createdBy:
+          type: string
+          format: uuid
+          description: 'Идентификато создателя позиции'
+        createdDate:
+          type: string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+          description: 'Дата создания позиции'
+        version:
+          type: integer
+          format: i32
+          description: 'Версия позиции'
+    BotAction:
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'Идентификатор действия'
+        title:
+          type: string
+          description: 'Название действия'
+          x-constraints: '@NotBlank(message = "{bot_action.title.is_blank}")'
+        type:
+          type: string
+          description: 'Тип действия'
+          x-constraints: '@NotBlank(message = "{bot_action.type.is_blank}")'
+        data:
+          type: object
+          description: 'Данные действия'
+          x-constraints: '@NotNull(message = "{bot_action.data.is_null}")'
+        locale:
+          type: string
+          default: 'ru'
+          description: 'Локализация действия'
+        createdBy:
+          type: string
+          format: uuid
+          description: 'Идентификато создателя действия'
+        createdDate:
+          type: string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+          description: 'Дата создания действия'
+        version:
+          type: integer
+          format: i32
+          description: 'Версия действия'
+    BotActionAudit:
+      required:
+        - id
+        - positionId
+        - userId
+        - createdDate
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'Идентификатор действия'
+        positionId:
+          type: string
+          format: uuid
+          description: 'Идентификатор позиции'
+        userId:
+          type: string
+          format: uuid
+          description: 'Идентификатор пользователя'
+        createdDate:
+          type: string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+          description: 'Дата выполнения действия'
+    BotUserInfo:
+      required:
+        - id
+        - username
+        - botId
+        - telegramId
+        - currentPosition
+        - createdDate
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 'Идентификатор пользователя'
+        username:
+          type: string
+          description: 'Логин пользователя'
+        botId:
+          type: string
+          format: uuid
+          description: 'Идентификатор бота'
+        telegramId:
+          type: string
+          description: 'Идентификатор в телеграм'
+        currentPosition:
+          type: string
+          description: 'Текущая позиция пользователя'
+        fullName:
+          type: string
+          description: 'ФИО пользователя'
+        email:
+          type: string
+          description: 'Почта пользователя'
+        phone:
+          type: string
+          description: 'Номер пользователя'
+        currentLocale:
+          type: string
+          default: 'ru'
+          description: 'Локализация пользователя'
+        createdDate:
+          type: string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+          description: 'Дата создания действия'
+
+    ############# filters
+    PagingRequest:
+      properties:
+        page:
+          type: integer
+          format: i64
+          default: 0
+          description: 'Запрашиваемая страница'
+          x-constraints: '@NotNull(message = "{request.page.is_null}")'
+        pageSize:
+          type: integer
+          format: i32
+          default: 1000
+          description: 'Размер страницы'
+          x-constraints: '@NotNull(message = "{request.page.size_is_null}")'
+    PagingResponse:
+      required:
+        - totalCount
+        - page
+      properties:
+        totalCount:
+          type: integer
+          format: i64
+          description: 'Всего значений'
+        page:
+          type: integer
+          format: i64
+          description: 'Текущая страница'
+    Sort:
+      properties:
+        field:
+          type: string
+          description: 'Поле, по которому идет сортировка'
+          x-constraints: '@NotNull(message = "{request.sort.field_is_null}")'
+        type:
+          enum: [ 'asc', 'desc' ]
+          description: 'Направление сортировки'
+          x-constraints: '@NotNull(message = "{request.sort.type_is_null}")'
+        order:
+          type: integer
+          format: i32
+          description: 'Порядок сортировки'
+          default: 0
+          x-constraints: '@NotNull(message = "{request.sort.order_is_null}")'
+    Filter:
+      properties:
+        field:
+          type: string
+          description: 'Поле, по которому идет сортировка'
+          x-constraints: '@NotNull(message = "{request.filter.field_is_null}")'
+        operation:
+          enum: [ 'equals', 'nequals', 'in', 'not in','between','contains', 'or', 'and' ]
+          description: 'Тип операции'
+          x-constraints: '@NotNull(message = "{request.filter.operation_is_null}")'
+        value:
+          type: array
+          description: 'Значения, которые используются в фильтрации'
+          x-constraints: '@NotEmpty(message = "{request.filter.value_is_empty}")'
+          items:
+            type: object
+    FilterRequest:
+      properties:
+        paging:
+          $ref: '#/components/parameters/PagingRequest'
+        sort:
+          type: array
+          items:
+            $ref: '#/components/parameters/Sort'
+        filters:
+          type: array
+          items:
+            $ref: '#/components/parameters/Filter'
+
+    ############# filter responses with types
+    FilterBotResponse:
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/parameters/PagingResponse'
+        data:
+          type: array
+          description: 'Запрашиваемые данные'
+          items:
+            $ref: '#/components/parameters/Bot'
+    FilterBotActionResponse:
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/parameters/PagingResponse'
+        data:
+          type: array
+          description: 'Запрашиваемые данные'
+          items:
+            $ref: '#/components/parameters/BotAction'
+    FilterBotPositionInfoResponse:
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/parameters/PagingResponse'
+        data:
+          type: array
+          description: 'Запрашиваемые данные'
+          items:
+            $ref: '#/components/parameters/BotPositionInfo'
+    FilterBotActionAuditResponse:
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/parameters/PagingResponse'
+        data:
+          type: array
+          description: 'Запрашиваемые данные'
+          items:
+            $ref: '#/components/parameters/BotActionAudit'
+    FilterBotUserInfoResponse:
+      required:
+        - paging
+        - data
+      properties:
+        paging:
+          $ref: '#/components/parameters/PagingResponse'
+        data:
+          type: array
+          description: 'Запрашиваемые данные'
+          items:
+            $ref: '#/components/parameters/BotUserInfo'

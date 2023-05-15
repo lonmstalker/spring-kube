@@ -9,5 +9,6 @@ data class UserProvider(
     val userId: UUID,
     val providerUserId: String,
     val username: String,
-    val enabled: Boolean = true
+    val enabled: Boolean = true,
+    val user: User? = null
 )
