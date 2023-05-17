@@ -363,6 +363,10 @@ components:
           type: string
           description: 'Название бота'
           x-constraints: '@NotBlank(message = "{bot.title.is_blank}")'
+        username:
+          type: string
+          description: 'Username бота'
+          x-constraints: '@NotBlank(message = "{bot.username.is_blank}")'
         url:
           type: string
           description: 'Ссылка на бота'

@@ -7,6 +7,7 @@ import java.util.*
 data class Bot(
     val id: UUID = UUID.randomUUID(),
     val title: String,
+    val username: String,
     val url: String,
     val hash: String,
     val createdBy: UUID?,

@@ -33,6 +33,12 @@
             <artifactId>mapstruct</artifactId>
         </dependency>
 
+        <!-- TELEGRAM -->
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+        </dependency>
+
         <!-- DATASOURCE -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
