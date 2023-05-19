@@ -17,15 +17,15 @@ import java.util.*
 )
 interface BotMapper : RecordMapper<Record, Bot> {
 
-    fun fromRecord(bot: Record?): Bot
+    fun fromRecord(bot: BotRecord?): Bot
 
     @Mapping(target = "userGroupId", ignore = true)
-    @Mapping(target = "version", defaultExpression = "java(0)")
+    @Mapping(target = "version", defaultValue = "0")
     @Mapping(target = "id", defaultExpression = "java(UUID.randomUUID())")
     @Mapping(target = "status", defaultExpression = "java(BotDto.Status.enabled.name())")
     fun toModel(bot: BotDto): Bot
 
     fun toDto(bot: Bot): BotDto
 
-    override fun map(record: Record?): Bot? = record?.let { this.fromRecord(it.into(BotRecord::class.java)) }
+    override fun map(record: Record): Bot = this.fromRecord(record.into(BotRecord::class.java))
 }

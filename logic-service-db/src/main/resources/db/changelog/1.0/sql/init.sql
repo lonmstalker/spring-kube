@@ -23,15 +23,16 @@ CREATE TABLE bot
 CREATE TABLE bot_user_info
 (
     id               UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
-    bot_id           UUID REFERENCES bot (id)                 NOT NULL,
-    telegram_id      VARCHAR(255)                             NOT NULL,
-    username         VARCHAR(255)                             NOT NULL,
-    current_position VARCHAR(100)             DEFAULT 'START' NOT NULL,
-    email            VARCHAR(255)                             NULL,
-    phone            VARCHAR(255)                             NULL,
-    full_name        VARCHAR(255)                             NULL,
-    current_locale   VARCHAR(10)              DEFAULT 'ru'    NOT NULL,
-    created_date     TIMESTAMP WITH TIME ZONE DEFAULT now()   NOT NULL
+    bot_id           UUID REFERENCES bot (id)                  NOT NULL,
+    telegram_id      VARCHAR(255)                              NOT NULL,
+    username         VARCHAR(255)                              NOT NULL,
+    current_position VARCHAR(100)             DEFAULT 'START'  NOT NULL,
+    email            VARCHAR(255)                              NULL,
+    phone            VARCHAR(255)                              NULL,
+    full_name        VARCHAR(255)                              NULL,
+    status           VARCHAR(100)             DEFAULT 'ACTIVE' NOT NULL,
+    current_locale   VARCHAR(10)              DEFAULT 'ru'     NOT NULL,
+    created_date     TIMESTAMP WITH TIME ZONE DEFAULT now()    NOT NULL
 );
 -- rollback drop table bot_user_info;
 

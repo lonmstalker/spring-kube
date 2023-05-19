@@ -23,20 +23,20 @@ class BotRepositoryImpl(
     private val clockHelper: ClockHelper,
 ) : BotRepository {
 
-    override suspend fun findBots(userId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>> =
+    override suspend fun findAllByUser(userId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>> =
         this.jooqHelper.selectFluxWithCount(
             BOT,
             request,
-            { this.botMapper.fromRecord(it) },
-            arrayOf(BOT.CREATED_BY.eq(userId))
+            { this.botMapper.map(it) },
+            BOT.CREATED_BY.eq(userId)
         )
 
-    override suspend fun findByUserGroup(userGroupId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>> =
+    override suspend fun findAllByGroup(userGroupId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>> =
         this.jooqHelper.selectFluxWithCount(
             BOT,
             request,
-            { this.botMapper.fromRecord(it) },
-            arrayOf(BOT.USER_GROUP_ID.eq(userGroupId))
+            { this.botMapper.map(it) },
+            BOT.USER_GROUP_ID.eq(userGroupId)
         )
 
     override suspend fun save(bot: Bot, userInfo: UserInfo): Bot =
@@ -66,7 +66,7 @@ class BotRepositoryImpl(
             )
             .returning()
             .awaitFirst()
-            .map { this.botMapper.fromRecord(it) }
+            .map { this.botMapper.map(it) }
 
     override suspend fun update(bot: Bot, userInfo: UserInfo): Bot =
         this.ctx
@@ -80,7 +80,7 @@ class BotRepositoryImpl(
             .and(BOT.CREATED_BY.eq(userInfo.userId).or(BOT.USER_GROUP_ID.eq(userInfo.userGroupId)))
             .returning()
             .awaitFirst()
-            .map { this.botMapper.fromRecord(it) }
+            .map { this.botMapper.map(it) }
 
     override suspend fun findById(id: UUID, userInfo: UserInfo): Bot? =
         this.ctx
@@ -88,5 +88,5 @@ class BotRepositoryImpl(
             .where(BOT.ID.eq(id))
             .and(BOT.CREATED_BY.eq(userInfo.userId).or(BOT.USER_GROUP_ID.eq(userInfo.userGroupId)))
             .awaitFirstOrNull()
-            ?.map { this.botMapper.fromRecord(it) }
+            ?.map { this.botMapper.map(it) }
 }

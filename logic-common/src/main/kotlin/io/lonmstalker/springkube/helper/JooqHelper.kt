@@ -9,6 +9,8 @@ import io.lonmstalker.springkube.model.paging.Filter
 import io.lonmstalker.springkube.model.paging.FilterRequest
 import io.lonmstalker.springkube.model.paging.Operation
 import io.lonmstalker.springkube.model.paging.PageResponse
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.reactive.awaitFirst
 import org.jooq.*
 import org.jooq.impl.DSL
@@ -21,25 +23,70 @@ class JooqHelper(private val ctx: DSLContext) {
     suspend fun <T> selectFluxWithCount(
         table: Table<*>,
         rq: FilterRequest,
-        transformation: (Record) -> T,
-        additionalFilters: Array<Condition>?
+        transformation: (Record) -> T
     ): Pair<PageResponse, List<T>> {
         val filters = rq.filters?.mapTo(mutableListOf()) { getField(table, it) } ?: mutableListOf()
+        return this.internalPageRequest(table, filters, rq.paging?.page, transformation)
+    }
 
-        if (additionalFilters != null) {
-            filters.addAll(additionalFilters)
-        }
+    suspend fun <T> selectFluxWithCount(
+        table: Table<*>,
+        rq: FilterRequest,
+        transformation: (Record) -> T,
+        additionalFilter1: Condition
+    ): Pair<PageResponse, List<T>> {
+        val filters = rq.filters?.mapTo(mutableListOf()) { getField(table, it) } ?: mutableListOf()
+        filters.add(additionalFilter1)
+        return this.internalPageRequest(table, filters, rq.paging?.page, transformation)
+    }
 
-        val count = ctx.selectCount().from(table).where(filters).awaitFirst().get(0, Int::class.java)
-        val data = Flux.from(ctx.selectFrom(table)).collectList().awaitFirst().map(transformation)
+    suspend fun <T> selectFluxWithCount(
+        table: Table<*>,
+        rq: FilterRequest,
+        transformation: (Record) -> T,
+        additionalFilter1: Condition,
+        additionalFilter2: Condition
+    ): Pair<PageResponse, List<T>> {
+        val filters = rq.filters?.mapTo(mutableListOf()) { getField(table, it) } ?: mutableListOf()
+        filters.add(additionalFilter1)
+        filters.add(additionalFilter2)
+        return this.internalPageRequest(table, filters, rq.paging?.page, transformation)
+    }
 
-        return PageResponse(page = if (data.isNotEmpty()) rq.paging?.page ?: 0 else 0, totalCount = count) to data
+    suspend fun <T> selectFluxWithCountManyFilters(
+        table: Table<*>,
+        rq: FilterRequest,
+        transformation: (Record) -> T,
+        vararg additionalFilter: Condition
+    ): Pair<PageResponse, List<T>> {
+        val filters = rq.filters?.mapTo(mutableListOf()) { getField(table, it) } ?: mutableListOf()
+        filters.addAll(additionalFilter)
+        return this.internalPageRequest(table, filters, rq.paging?.page, transformation)
     }
 
     fun select(table: Table<*>, rq: FilterRequest): SelectConditionStep<out Record> =
         this.ctx
             .selectFrom(table)
             .where(rq.filters?.map { this.getField(table, it) })
+
+    private suspend fun <T> internalPageRequest(
+        table: Table<*>,
+        filters: List<Condition>,
+        page: Int?,
+        transformation: (Record) -> T
+    ): Pair<PageResponse, List<T>> =
+        coroutineScope {
+            val count = async { ctx.selectCount().from(table).where(filters).awaitFirst().get(0, Int::class.java) }
+            val data = async { Flux.from(ctx.selectFrom(table)).collectList().awaitFirst().map(transformation) }.await()
+
+            return@coroutineScope PageResponse(
+                page = if (data.isNotEmpty()) page ?: 0 else 0,
+                totalCount = count.await()
+            ) to data
+        }
+
+    private fun mapFilters(table: Table<*>, rq: FilterRequest) =
+        rq.filters?.mapTo(mutableListOf()) { getField(table, it) } ?: mutableListOf()
 
     private fun getField(table: Table<*>, filter: Filter): Condition =
         when (filter.operation) {

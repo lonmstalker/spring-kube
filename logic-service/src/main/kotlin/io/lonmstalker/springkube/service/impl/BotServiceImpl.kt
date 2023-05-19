@@ -7,7 +7,6 @@ import io.lonmstalker.springkube.model.paging.FilterRequest
 import io.lonmstalker.springkube.model.paging.PageResponse
 import io.lonmstalker.springkube.repository.BotRepository
 import io.lonmstalker.springkube.service.BotService
-import kotlinx.coroutines.flow.Flow
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
@@ -21,9 +20,9 @@ class BotServiceImpl(
         userInfo: UserInfo, request: FilterRequest, onlyCurrentUser: Boolean
     ): Pair<PageResponse, List<Bot>> =
         if (onlyCurrentUser) {
-            this.botRepository.findBots(userInfo.userId, request)
+            this.botRepository.findAllByUser(userInfo.userId, request)
         } else {
-            this.botRepository.findByUserGroup(userInfo.userGroupId, request)
+            this.botRepository.findAllByGroup(userInfo.userGroupId, request)
         }
 
     override suspend fun findById(id: UUID, userInfo: UserInfo): Bot =

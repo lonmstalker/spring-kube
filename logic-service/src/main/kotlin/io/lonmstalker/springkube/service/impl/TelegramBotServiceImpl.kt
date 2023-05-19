@@ -17,7 +17,7 @@ class TelegramBotServiceImpl(
     private val executorService: ExecutorService,
     private val botWorkerService: BotWorkerService,
 ) : TelegramBotService {
-    private val exeField = executorField()
+    private val exeField = this.executorField()
     private val botMap = ConcurrentHashMap<UUID, TelegramLongPollingBot>()
 
     override fun enableBot(bot: Bot, userId: UUID) {

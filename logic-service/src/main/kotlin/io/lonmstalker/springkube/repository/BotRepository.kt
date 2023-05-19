@@ -7,8 +7,8 @@ import io.lonmstalker.springkube.model.paging.PageResponse
 import java.util.*
 
 interface BotRepository {
-    suspend fun findBots(userId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>>
-    suspend fun findByUserGroup(userGroupId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>>
+    suspend fun findAllByUser(userId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>>
+    suspend fun findAllByGroup(userGroupId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>>
     suspend fun save(bot: Bot, userInfo: UserInfo): Bot
     suspend fun update(bot: Bot, userInfo: UserInfo): Bot
     suspend fun findById(id: UUID, userInfo: UserInfo): Bot?
