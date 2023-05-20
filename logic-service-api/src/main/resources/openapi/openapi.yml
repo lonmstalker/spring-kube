@@ -362,19 +362,19 @@ components:
         title:
           type: string
           description: 'Название бота'
-          x-constraints: '@NotBlank(message = "{bot.title.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "bot.title.is_blank")'
         username:
           type: string
           description: 'Username бота'
-          x-constraints: '@NotBlank(message = "{bot.username.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "bot.username.is_blank")'
         url:
           type: string
           description: 'Ссылка на бота'
-          x-constraints: '@NotBlank(message = "{bot.url.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "bot.url.is_blank")'
         hash:
           type: string
           description: 'Хеш для подключения к боту'
-          x-constraints: '@NotBlank(message = "{bot.hash.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "bot.hash.is_blank")'
         status:
           type: string
           enum: [ 'enabled', 'disabled', 'blocked' ]
@@ -401,21 +401,21 @@ components:
         title:
           type: string
           description: 'Название позиции'
-          x-constraints: '@NotBlank(message = "{bot.position.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "bot.position.is_blank")'
         botId:
           type: string
           format: uuid
           description: 'Идентификатор бота, для которого создана позиция'
-          x-constraints: '@NotBlank(message = "{bot_position.bot_id.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "bot_id.is_blank")'
         actionId:
           type: string
           format: uuid
           description: 'Идентификатор действия, происходящего при назначении события'
-          x-constraints: '@NotBlank(message = "{bot_position.action_id.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "bot_position.action_id.is_blank")'
         fromPosition:
           type: string
           description: 'Позиция, для которой срабатывает действие'
-          x-constraints: '@NotBlank(message = "{bot_position.from_position.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "bot_position.from_position.is_blank")'
         toPosition:
           type: string
           description: 'Позиция, в которую перейдет пользователь, иначе останется старая позиция'
@@ -445,15 +445,15 @@ components:
         title:
           type: string
           description: 'Название действия'
-          x-constraints: '@NotBlank(message = "{bot_action.title.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "title.is_blank")'
         type:
           type: string
           description: 'Тип действия'
-          x-constraints: '@NotBlank(message = "{bot_action.type.is_blank}")'
+          x-constraints: '@field:NotBlank(message = "type.is_blank")'
         data:
           type: object
           description: 'Данные действия'
-          x-constraints: '@NotNull(message = "{bot_action.data.is_null}")'
+          x-constraints: '@field:NotNull(message = "action.data.is_null")'
         locale:
           type: string
           default: 'ru'
@@ -551,13 +551,13 @@ components:
           format: i64
           default: 0
           description: 'Запрашиваемая страница'
-          x-constraints: '@NotNull(message = "{request.page.is_null}")'
+          x-constraints: '@field:NotNull(message = "request.page.is_null")'
         pageSize:
           type: integer
           format: i32
           default: 1000
           description: 'Размер страницы'
-          x-constraints: '@NotNull(message = "{request.page.size_is_null}")'
+          x-constraints: '@field:NotNull(message = "request.page.size_is_null")'
     PagingResponse:
       required:
         - totalCount
@@ -576,31 +576,30 @@ components:
         field:
           type: string
           description: 'Поле, по которому идет сортировка'
-          x-constraints: '@NotNull(message = "{request.sort.field_is_null}")'
+          x-constraints: '@field:NotNull(message = "request.sort.field_is_null")'
         type:
           enum: [ 'asc', 'desc' ]
           description: 'Направление сортировки'
-          x-constraints: '@NotNull(message = "{request.sort.type_is_null}")'
+          x-constraints: '@field:NotNull(message = "request.sort.type_is_null")'
         order:
           type: integer
           format: i32
           description: 'Порядок сортировки'
           default: 0
-          x-constraints: '@NotNull(message = "{request.sort.order_is_null}")'
     Filter:
       properties:
         field:
           type: string
           description: 'Поле, по которому идет сортировка'
-          x-constraints: '@NotEmpty(message = "{request.filter.field_is_empty}")'
+          x-constraints: '@field:NotEmpty(message = "request.filter.field_is_empty")'
         operation:
           enum: [ 'equals', 'nequals', 'in', 'not in', 'between', 'contains', 'or', 'and' ]
           description: 'Тип операции'
-          x-constraints: '@NotNull(message = "{request.filter.operation_is_null}")'
+          x-constraints: '@field:NotNull(message = "request.filter.operation_is_null")'
         value:
           type: array
           description: 'Значения, которые используются в фильтрации'
-          x-constraints: '@NotEmpty(message = "{request.filter.value_is_empty}")'
+          x-constraints: '@field:NotEmpty(message = "request.filter.value_is_empty")'
           items:
             type: object
     FilterRequest:

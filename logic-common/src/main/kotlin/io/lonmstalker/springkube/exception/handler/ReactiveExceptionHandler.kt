@@ -5,6 +5,7 @@ import io.lonmstalker.springkube.constants.ErrorCodes
 import io.lonmstalker.springkube.constants.ErrorCodes.INTERNAL_SERVER_ERROR
 import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_MEDIA_TYPE
 import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_REQUEST_BODY
+import io.lonmstalker.springkube.constants.ErrorCodes.INVALID_VALIDATION
 import io.lonmstalker.springkube.exception.BaseException
 import io.lonmstalker.springkube.helper.ClockHelper
 import io.lonmstalker.springkube.helper.ReactiveMessageHelper
@@ -56,7 +57,7 @@ class ReactiveExceptionHandler(
                         it.field,
                         it.defaultMessage?.let { messageHelper.getMessageByExchange(exchange, it) })
                 }
-                .run { ex.writeBody(response, buildErrorDto(fields = this)) }
+                .run { ex.writeBody(response, buildErrorDto(fields = this, code = INVALID_VALIDATION, status = 400)) }
 
         }
         if (ex is ConstraintViolationException) {

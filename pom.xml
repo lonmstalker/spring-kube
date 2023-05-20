@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
+        <version>3.0.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -24,7 +24,7 @@
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
 
         <bcprov.version>1.73</bcprov.version>
-        <openapi.version>6.5.0</openapi.version>
+        <openapi.version>6.6.0</openapi.version>
         <exposed.version>0.41.1</exposed.version>
         <telegrambots.version>6.5.0</telegrambots.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>

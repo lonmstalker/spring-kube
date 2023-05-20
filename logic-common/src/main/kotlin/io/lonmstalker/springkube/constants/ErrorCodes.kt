@@ -2,6 +2,8 @@ package io.lonmstalker.springkube.constants
 
 object ErrorCodes {
     const val INTERNAL_SERVER_ERROR = "server.error"
+    const val INVALID_VALIDATION = "server.data_validation_failed"
+
     const val INVALID_MEDIA_TYPE = "server.media_type.invalid"
     const val INVALID_REQUEST_BODY = "server.request_body_invalid"
 
