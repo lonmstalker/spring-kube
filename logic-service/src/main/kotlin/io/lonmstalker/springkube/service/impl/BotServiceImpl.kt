@@ -16,7 +16,7 @@ class BotServiceImpl(
     private val botRepository: BotRepository
 ) : BotService {
 
-    override suspend fun getBots(
+    override suspend fun findAll(
         userInfo: UserInfo, request: FilterRequest, onlyCurrentUser: Boolean
     ): Pair<PageResponse, List<Bot>> =
         if (onlyCurrentUser) {

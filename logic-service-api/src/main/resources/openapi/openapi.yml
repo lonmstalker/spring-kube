@@ -311,7 +311,7 @@ paths:
             schema:
               $ref: '#/components/schemas/FilterRequest'
       tags:
-        - BotPosition
+        - Audit
       responses:
         '200':
           content:
@@ -333,7 +333,7 @@ paths:
             schema:
               $ref: '#/components/schemas/FilterRequest'
       tags:
-        - BotPosition
+        - TelegramUser
       responses:
         '200':
           content:
@@ -526,6 +526,9 @@ components:
         phone:
           type: string
           description: 'Номер пользователя'
+        status:
+          type: string
+          enum: [ "active", "blocked", "deleted" ]
         currentLocale:
           type: string
           default: 'ru'

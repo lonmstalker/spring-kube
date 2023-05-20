@@ -10,7 +10,8 @@ data class BotAction(
     val type: ActionType,
     val data: Any,
     val locale: String,
-    val userGroupId: UUID,
-    val createdBy: UUID,
-    val createdDate: OffsetDateTime
+    val userGroupId: UUID?,
+    val createdBy: UUID?,
+    val createdDate: OffsetDateTime?,
+    val version: Int = 0
 )

@@ -20,10 +20,8 @@ class BotController(
 
     override suspend fun findAll(filterRequestDto: FilterRequestDto): FilterBotResponseDto =
         this.botService
-            .getBots(getUser(), this.filterMapper.toModel(filterRequestDto), true)
-            .let {
-                FilterBotResponseDto(filterMapper.toDto(it.first), it.second.map { this.botMapper.toDto(it) })
-            }
+            .findAll(getUser(), this.filterMapper.toModel(filterRequestDto), true)
+            .let { FilterBotResponseDto(filterMapper.toDto(it.first), it.second.map { this.botMapper.toDto(it) }) }
 
     override suspend fun findById(id: UUID): BotDto =
         this.botService

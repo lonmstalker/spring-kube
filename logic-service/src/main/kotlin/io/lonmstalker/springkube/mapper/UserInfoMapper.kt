@@ -1,5 +1,6 @@
 package io.lonmstalker.springkube.mapper
 
+import io.lonmstalker.springkube.dto.BotUserInfoDto
 import io.lonmstalker.springkube.model.BotUserInfo
 import io.lonmstalker.springkube.model.tables.records.BotUserInfoRecord
 import org.jooq.Record
@@ -14,6 +15,8 @@ import org.mapstruct.Mapper
 interface UserInfoMapper : RecordMapper<Record, BotUserInfo> {
 
     fun fromRecord(bot: BotUserInfoRecord?): BotUserInfo
+
+    fun toDto(userInfo: BotUserInfo): BotUserInfoDto
 
     override fun map(record: Record): BotUserInfo? =
         this.fromRecord(record.into(BotUserInfoRecord::class.java))
