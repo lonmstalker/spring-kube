@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.server.reactive.ServerHttpResponse
+import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.reactive.function.UnsupportedMediaTypeException
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
@@ -46,6 +47,17 @@ class ReactiveExceptionHandler(
 
         if (ex is BaseException) {
             return ex.writeBody(response, buildErrorDto(messageHelper.getMessageByExchange(exchange, ex), status = 400))
+        }
+        if (ex is WebExchangeBindException) {
+            return ex.bindingResult.fieldErrors
+                .map {
+                    FieldError(
+                        it.code!!,
+                        it.field,
+                        it.defaultMessage?.let { messageHelper.getMessageByExchange(exchange, it) })
+                }
+                .run { ex.writeBody(response, buildErrorDto(fields = this)) }
+
         }
         if (ex is ConstraintViolationException) {
             return ex.writeBody(

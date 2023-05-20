@@ -1,5 +1,6 @@
 package io.lonmstalker.springkube.mapper
 
+import io.lonmstalker.springkube.config.MapstructConfig
 import io.lonmstalker.springkube.dto.FilterDto
 import io.lonmstalker.springkube.dto.FilterRequestDto
 import io.lonmstalker.springkube.dto.PagingResponseDto
@@ -8,13 +9,9 @@ import io.lonmstalker.springkube.model.paging.FilterRequest
 import io.lonmstalker.springkube.model.paging.Operation
 import io.lonmstalker.springkube.model.paging.PageResponse
 import io.lonmstalker.springkube.model.paging.SortType
-import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper
 
-@Mapper(
-    componentModel = "spring",
-    injectionStrategy = InjectionStrategy.CONSTRUCTOR
-)
+@Mapper(config = MapstructConfig::class)
 interface FilterMapper {
 
     fun toModel(filter: FilterRequestDto): FilterRequest

@@ -10,10 +10,13 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.core.io.ResourceLoader
+import org.springframework.http.HttpStatus
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.ServerAuthenticationEntryPoint
+import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint
 import reactor.core.publisher.Mono
 import java.security.interfaces.RSAPublicKey
 
@@ -40,6 +43,7 @@ class ReactiveSecurityConfig {
             .anyExchange().authenticated()
             .and()
             .oauth2ResourceServer()
+            .authenticationEntryPoint(HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED))
             .jwt()
             .jwtAuthenticationConverter(JwtCustomConverter())
             .jwtDecoder(jwtDecoder)

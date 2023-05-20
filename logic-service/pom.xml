@@ -58,7 +58,6 @@
             <artifactId>r2dbc-pool</artifactId>
         </dependency>
 
-
         <!-- TEST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

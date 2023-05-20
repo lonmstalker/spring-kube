@@ -5,6 +5,7 @@ import java.util.UUID
 
 data class BotPositionInfo(
     val id: UUID,
+    val title: String,
     val botId: UUID,
     val actionId: UUID,
     val fromPosition: String,

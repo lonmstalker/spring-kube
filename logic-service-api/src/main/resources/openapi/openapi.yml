@@ -398,6 +398,10 @@ components:
           type: string
           format: uuid
           description: 'Идентификатор позиции в боте'
+        title:
+          type: string
+          description: 'Название позиции'
+          x-constraints: '@NotBlank(message = "{bot.position.is_blank}")'
         botId:
           type: string
           format: uuid

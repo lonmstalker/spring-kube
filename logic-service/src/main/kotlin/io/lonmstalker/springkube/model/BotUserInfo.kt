@@ -13,6 +13,7 @@ data class BotUserInfo(
     val phone: String?,
     val fullName: String?,
     val currentLocale: String,
+    val currentPosition: String,
     val status: UserStatus = UserStatus.ACTIVE,
     val createdDate: OffsetDateTime
 )

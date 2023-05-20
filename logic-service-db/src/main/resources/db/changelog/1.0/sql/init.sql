@@ -9,6 +9,7 @@ CREATE TABLE bot
 (
     id            UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
     title         VARCHAR(255)                           NOT NULL,
+    username      VARCHAR(255)                           NOT NULL,
     url           VARCHAR(255)                           NOT NULL,
     hash          VARCHAR(255)                           NOT NULL,
     status        VARCHAR(50)                            NOT NULL,
@@ -55,6 +56,7 @@ CREATE TABLE bot_action
 CREATE TABLE bot_position_info
 (
     id            UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
+    title         VARCHAR(255)                           NOT NULL,
     bot_id        UUID REFERENCES bot (id),
     action_id     UUID REFERENCES bot_action (id),
     from_position VARCHAR(100)                           NOT NULL,
