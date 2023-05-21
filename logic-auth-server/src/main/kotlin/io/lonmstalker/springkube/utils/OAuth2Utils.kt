@@ -1,6 +1,6 @@
 package io.lonmstalker.springkube.utils
 
-import io.lonmstalker.springkube.constants.ErrorConstants
+import io.lonmstalker.springkube.constants.ErrorConstants.OAUTH2_BAD_REQUEST
 import io.lonmstalker.springkube.enums.Provider
 import io.lonmstalker.springkube.exception.AuthException
 import org.apache.commons.lang3.StringUtils
@@ -18,5 +18,5 @@ object OAuth2Utils {
     }
 
     fun exceptionOauth2BadRequest(message: String = StringUtils.EMPTY) =
-        AuthException(ErrorConstants.OAUTH2_BAD_REQUEST, message)
+        AuthException(OAUTH2_BAD_REQUEST, message)
 }

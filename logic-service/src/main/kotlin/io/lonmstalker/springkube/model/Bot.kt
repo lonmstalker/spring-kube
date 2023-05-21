@@ -1,6 +1,6 @@
 package io.lonmstalker.springkube.model
 
-import io.lonmstalker.springkube.dto.BotDto
+import io.lonmstalker.springkube.enums.BotStatus
 import java.time.OffsetDateTime
 import java.util.*
 
@@ -14,5 +14,5 @@ data class Bot(
     val userGroupId: UUID?,
     val createdDate: OffsetDateTime?,
     val version: Int = 0,
-    val status: String = BotDto.Status.enabled.name,
+    val status: BotStatus = BotStatus.ENABLED,
 )

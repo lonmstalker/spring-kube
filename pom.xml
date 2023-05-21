@@ -17,10 +17,12 @@
 
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.7.22</kotlin.version>
+        <kotlin.version>1.8.21</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
 
         <bcprov.version>1.73</bcprov.version>
@@ -28,9 +30,9 @@
         <exposed.version>0.41.1</exposed.version>
         <telegrambots.version>6.5.0</telegrambots.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <swagger-parser.version>2.1.13</swagger-parser.version>
+        <swagger-parser.version>2.1.14</swagger-parser.version>
 
-        <liquibase-plugin.version>4.21.1</liquibase-plugin.version>
+        <liquibase-plugin.version>4.22.0</liquibase-plugin.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
 
         <!--suppress UnresolvedMavenProperty -->
@@ -47,6 +49,7 @@
         <module>logic-service-db</module>
         <module>logic-service-api</module>
         <module>logic-auth-server</module>
+        <module>logic-auth-server-api</module>
     </modules>
 
     <dependencyManagement>
@@ -55,6 +58,11 @@
             <dependency>
                 <groupId>io.lonmstalker</groupId>
                 <artifactId>logic-service-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.lonmstalker</groupId>
+                <artifactId>logic-auth-server-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -120,7 +128,8 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
@@ -130,13 +139,29 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${project.basedir}/src/main/kotlin/</sourceDirectory>
+        <sourceDirectory>{project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.jetbrains.kotlin</groupId>
                     <artifactId>kotlin-maven-plugin</artifactId>
+                    <configuration>
+                        <sourceDirs>
+                            <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                            <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                            <sourceDir>${project.basedir}/target/generated-sources/kotlin</sourceDir>
+                        </sourceDirs>
+                        <args>
+                            <arg>-Xjsr305=strict</arg>
+                            <arg>-Xjvm-default=all</arg>
+                        </args>
+                        <compilerPlugins>
+                            <plugin>spring</plugin>
+                            <plugin>all-open</plugin>
+                            <plugin>no-arg</plugin>
+                        </compilerPlugins>
+                    </configuration>
                     <executions>
                         <execution>
                             <id>compile</id>
@@ -153,24 +178,15 @@
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>
-                        <sourceDirs>
-                            <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                            <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                            <sourceDir>${project.basedir}/target/generated-sources/kotlin</sourceDir>
-                        </sourceDirs>
-                        <args>
-                            <arg>-Xjsr305=strict</arg>
-                            <arg>-Xjvm-default=all</arg>
-                        </args>
-                        <compilerPlugins>
-                            <plugin>spring</plugin>
-                        </compilerPlugins>
-                    </configuration>
                     <dependencies>
                         <dependency>
                             <groupId>org.jetbrains.kotlin</groupId>
                             <artifactId>kotlin-maven-allopen</artifactId>
+                            <version>${kotlin.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.jetbrains.kotlin</groupId>
+                            <artifactId>kotlin-maven-noarg</artifactId>
                             <version>${kotlin.version}</version>
                         </dependency>
                     </dependencies>
@@ -181,8 +197,6 @@
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
                         <proc>none</proc>
-                        <source>${kotlin.compiler.jvmTarget}</source>
-                        <target>${kotlin.compiler.jvmTarget}</target>
                     </configuration>
                     <executions>
                         <execution>
@@ -253,7 +267,8 @@
                         <templateDirectory>${project.basedir}/target/classes/openapi/templates</templateDirectory>
                         <configOptions>
                             <useTags>true</useTags>
-                            <reactive>true</reactive>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <reactive>${reactive}</reactive>
                             <sourceFolder>/</sourceFolder>
                             <interfaceOnly>true</interfaceOnly>
                             <useSpringBoot3>true</useSpringBoot3>
@@ -281,6 +296,21 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>

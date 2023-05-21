@@ -416,12 +416,10 @@ components:
           x-constraints: '@field:NotBlank(message = "bot.position.is_blank")'
         botId:
           type: string
-          format: uuid
           description: 'Идентификатор бота, для которого создана позиция'
           x-constraints: '@field:NotBlank(message = "bot_id.is_blank")'
         actionId:
           type: string
-          format: uuid
           description: 'Идентификатор действия, происходящего при назначении события'
           x-constraints: '@field:NotBlank(message = "bot_position.action_id.is_blank")'
         fromPosition:
@@ -557,6 +555,7 @@ components:
 
     ############# filters
     PagingRequest:
+      description: 'Данные о пагинации'
       properties:
         page:
           type: integer
@@ -567,10 +566,11 @@ components:
         pageSize:
           type: integer
           format: i32
-          default: 1000
+          default: 250
           description: 'Размер страницы'
           x-constraints: '@field:NotNull(message = "request.page.size_is_null")'
     PagingResponse:
+      description: 'Данные о пагинации'
       required:
         - totalCount
         - page
@@ -584,6 +584,7 @@ components:
           format: i64
           description: 'Текущая страница'
     Sort:
+      description: 'Данные о сортировке'
       properties:
         field:
           type: string
@@ -599,11 +600,11 @@ components:
           description: 'Порядок сортировки'
           default: 0
     Filter:
+      description: 'Данные о фильтрации'
       properties:
         field:
           type: string
           description: 'Поле, по которому идет сортировка'
-          x-constraints: '@field:NotEmpty(message = "request.filter.field_is_empty")'
         operation:
           enum: [ 'equals', 'nequals', 'in', 'not in', 'between', 'contains', 'or', 'and' ]
           description: 'Тип операции'
@@ -615,6 +616,7 @@ components:
           items:
             type: object
     FilterRequest:
+      description: 'Контракт запросов с пагинацией, фильтрацией, сортировкой к сервисам'
       properties:
         paging:
           $ref: '#/components/parameters/PagingRequest'

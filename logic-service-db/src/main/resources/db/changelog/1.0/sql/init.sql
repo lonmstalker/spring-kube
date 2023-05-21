@@ -16,7 +16,8 @@ CREATE TABLE bot
     user_group_id UUID                                   NOT NULL,
     created_by    UUID                                   NOT NULL,
     created_date  TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    version       INT                      DEFAULT 0     NOT NULL
+    version       INT                      DEFAULT 0     NOT NULL,
+    UNIQUE (user_group_id, hash)
 );
 -- rollback drop table bot;
 
@@ -33,7 +34,8 @@ CREATE TABLE bot_user_info
     full_name        VARCHAR(255)                               NULL,
     status           VARCHAR(100)             DEFAULT 'ACTIVE'  NOT NULL,
     current_locale   VARCHAR(10)              DEFAULT 'ru'      NOT NULL,
-    created_date     TIMESTAMP WITH TIME ZONE DEFAULT now()     NOT NULL
+    created_date     TIMESTAMP WITH TIME ZONE DEFAULT now()     NOT NULL,
+    UNIQUE (telegram_id, bot_id)
 );
 -- rollback drop table bot_user_info;
 
@@ -65,8 +67,7 @@ CREATE TABLE bot_position_info
     locale        VARCHAR(10)              DEFAULT 'ru'      NOT NULL,
     created_by    UUID                                       NOT NULL,
     created_date  TIMESTAMP WITH TIME ZONE DEFAULT now()     NOT NULL,
-    version       INT                      DEFAULT 0         NOT NULL,
-    UNIQUE (from_position, bot_id, locale)
+    version       INT                      DEFAULT 0         NOT NULL
 );
 -- rollback drop table bot_position_info;
 

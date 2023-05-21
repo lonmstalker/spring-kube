@@ -17,14 +17,10 @@
         <!-- MODULES -->
         <dependency>
             <groupId>io.lonmstalker</groupId>
-            <artifactId>logic-common</artifactId>
+            <artifactId>logic-auth-server-api</artifactId>
         </dependency>
 
         <!-- SPRING -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -39,10 +35,6 @@
         </dependency>
 
         <!-- LIBRARIES -->
-        <dependency>
-            <groupId>io.swagger.parser.v3</groupId>
-            <artifactId>swagger-parser</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -70,18 +62,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <configuration>
-                    <configOptions>
-                        <reactive>false</reactive>
-                    </configOptions>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>

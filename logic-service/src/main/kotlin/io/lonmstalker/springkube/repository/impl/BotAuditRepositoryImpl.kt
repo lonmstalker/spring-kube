@@ -27,13 +27,15 @@ class BotAuditRepositoryImpl(
 ) : BotAuditRepository {
     private val joinBotId = "positionId[botPositionInfo].botId"
 
-    override suspend fun findAll(botId: UUID, request: FilterRequest): Pair<PageResponse, List<BotActionAudit>> =
-        jooqHelper.selectFluxWithCount(
+    override suspend fun findAll(botId: UUID, request: FilterRequest): Pair<PageResponse, List<BotActionAudit>> {
+        val filter = Filter(joinBotId, listOf(botId), Operation.EQUALS)
+        return jooqHelper.selectFluxWithCount(
             BOT_ACTION_AUDIT,
-            request.apply { request.filters.add(Filter(joinBotId, listOf(botId), Operation.EQUALS)) },
+            request.apply { this.filters = this.filters?.apply { this.add(filter) } ?: mutableListOf(filter) },
             { auditMapper.map(it) },
             BOT_POSITION_INFO.BOT_ID.eq(botId)
         )
+    }
 
     override suspend fun save(action: BotActionAudit, userInfo: UserInfo): BotActionAudit =
         this.ctx

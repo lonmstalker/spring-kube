@@ -1,13 +1,13 @@
 package io.lonmstalker.springkube.model
 
-import org.telegram.telegrambots.meta.api.methods.ActionType
+import io.lonmstalker.springkube.enums.DefaultActions
 import java.time.OffsetDateTime
-import java.util.UUID
+import java.util.*
 
 data class BotAction(
-    val id: UUID,
+    val id: UUID? = UUID.randomUUID(),
     val title: String,
-    val type: ActionType,
+    val type: DefaultActions,
     val data: Any,
     val locale: String,
     val userGroupId: UUID?,

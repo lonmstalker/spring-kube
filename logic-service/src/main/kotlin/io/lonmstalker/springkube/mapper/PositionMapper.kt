@@ -15,6 +15,8 @@ interface PositionMapper : RecordMapper<Record, BotPositionInfo> {
     fun fromRecord(bot: BotPositionInfoRecord?): BotPositionInfo
 
     @Mapping(target = "userGroupId", ignore = true)
+    @Mapping(target = "version", defaultValue = "0")
+    @Mapping(target = "id", defaultExpression = "java(UUID.randomUUID())")
     fun toModel(position: BotPositionInfoDto): BotPositionInfo
 
     fun toDto(position: BotPositionInfo): BotPositionInfoDto

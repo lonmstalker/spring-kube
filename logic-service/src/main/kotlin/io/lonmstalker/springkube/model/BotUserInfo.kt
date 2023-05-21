@@ -5,7 +5,7 @@ import java.time.OffsetDateTime
 import java.util.UUID
 
 data class BotUserInfo(
-    val id: UUID,
+    val id: UUID = UUID.randomUUID(),
     val botId: UUID,
     val telegramId: String,
     val username: String,

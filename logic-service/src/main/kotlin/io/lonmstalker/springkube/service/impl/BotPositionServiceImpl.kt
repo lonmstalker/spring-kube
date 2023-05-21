@@ -36,7 +36,7 @@ class BotPositionServiceImpl(
             .apply { log.debug("saved position {} by {}", this.id, userInfo.userId) }
 
     override suspend fun update(position: BotPositionInfo, userInfo: UserInfo): BotPositionInfo =
-        this.botPositionRepository.save(position, userInfo)
+        this.botPositionRepository.update(position, userInfo)
             .apply { log.debug("updated position {} by {}", this.id, userInfo.userId) }
 
     companion object {

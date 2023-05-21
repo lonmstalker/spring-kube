@@ -35,7 +35,7 @@ class BotServiceImpl(
             .apply { log.debug("saved bot {} by {}", this.id, userInfo.userId) }
 
     override suspend fun update(bot: Bot, userInfo: UserInfo): Bot =
-        this.botRepository.save(bot, userInfo)
+        this.botRepository.update(bot, userInfo)
             .apply { log.debug("updated bot {} by {}", this.id, userInfo.userId) }
 
     companion object {

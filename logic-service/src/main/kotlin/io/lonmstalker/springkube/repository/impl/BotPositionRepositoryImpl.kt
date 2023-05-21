@@ -7,7 +7,6 @@ import io.lonmstalker.springkube.model.BotPositionInfo
 import io.lonmstalker.springkube.model.UserInfo
 import io.lonmstalker.springkube.model.paging.FilterRequest
 import io.lonmstalker.springkube.model.paging.PageResponse
-import io.lonmstalker.springkube.model.tables.references.BOT_ACTION
 import io.lonmstalker.springkube.model.tables.references.BOT_POSITION_INFO
 import io.lonmstalker.springkube.repository.BotPositionRepository
 import kotlinx.coroutines.reactive.awaitFirst
@@ -95,7 +94,7 @@ class BotPositionRepositoryImpl(
 
     private suspend fun FilterRequest.selectFluxWithCount(condition: Condition) =
         jooqHelper.selectFluxWithCount(
-            BOT_ACTION,
+            BOT_POSITION_INFO,
             this,
             { positionMapper.map(it) },
             condition

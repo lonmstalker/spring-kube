@@ -15,6 +15,8 @@ interface ActionMapper : RecordMapper<Record, BotAction> {
     fun fromRecord(bot: BotActionRecord?): BotAction
 
     @Mapping(target = "userGroupId", ignore = true)
+    @Mapping(target = "version", defaultValue = "0")
+    @Mapping(target = "id", defaultExpression = "java(UUID.randomUUID())")
     fun toModel(action: BotActionDto): BotAction
 
     fun toDto(action: BotAction): BotActionDto

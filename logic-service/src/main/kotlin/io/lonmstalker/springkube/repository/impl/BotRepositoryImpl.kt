@@ -36,6 +36,7 @@ class BotRepositoryImpl(
                 BOT,
                 BOT.ID,
                 BOT.TITLE,
+                BOT.USERNAME,
                 BOT.URL,
                 BOT.HASH,
                 BOT.STATUS,
@@ -47,9 +48,10 @@ class BotRepositoryImpl(
             .values(
                 bot.id,
                 bot.title,
+                bot.username,
                 bot.url,
                 bot.hash,
-                bot.status,
+                bot.status.name,
                 userInfo.userGroupId,
                 this.clockHelper.clockOffset(),
                 userInfo.userId,
@@ -65,7 +67,7 @@ class BotRepositoryImpl(
             .set(BOT.TITLE, bot.title)
             .set(BOT.URL, bot.url)
             .set(BOT.HASH, bot.hash)
-            .set(BOT.STATUS, bot.status)
+            .set(BOT.STATUS, bot.status.name)
             .set(BOT.VERSION, bot.version + 1)
             .where(BOT.ID.eq(bot.id))
             .and(BOT.CREATED_BY.eq(userInfo.userId).or(BOT.USER_GROUP_ID.eq(userInfo.userGroupId)))

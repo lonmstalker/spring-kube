@@ -7,5 +7,4 @@ import org.mapstruct.MapperConfig
     componentModel = "spring",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR
 )
-interface MapstructConfig {
-}
+interface MapstructConfig

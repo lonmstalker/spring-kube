@@ -1,0 +1,852 @@
+{
+	"info": {
+		"_postman_id": "3a40a846-05a1-4858-8553-c1e60407f346",
+		"name": "logic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "flow",
+					"item": [
+						{
+							"name": "login via vk",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{HOST_AUTH}}/auth/oauth2/authorization/vk",
+									"host": [
+										"{{HOST_AUTH}}"
+									],
+									"path": [
+										"auth",
+										"oauth2",
+										"authorization",
+										"vk"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "registration",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "web",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"123123\",\r\n    \"firstName\": \"Nikita\",\r\n    \"username\": \"boss\",\r\n    \"lastName\": \"last\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_AUTH}}/auth/api/v1/public/reg",
+							"host": [
+								"{{HOST_AUTH}}"
+							],
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"public",
+								"reg"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"TOKEN\", jsonData[\"access_token\"]);\r",
+									"\r",
+									"pm.test(\"Successful create token\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "web",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Trace-Id",
+								"value": "123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"grant_type\": \"client_credentials\",\r\n    \"client_id\": \"boss\",\r\n    \"client_secret\": \"123123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_AUTH}}/auth/api/v1/oauth2/token",
+							"host": [
+								"{{HOST_AUTH}}"
+							],
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "web",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Trace-Id",
+								"value": "123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"grant_type\": \"refresh_token\",\r\n    \"refresh_token\": \"eyJ4NXQjUzI1NiI6ImpqTFRyRGdDcUJDUXdYQnBKbWxIZ2lwWVRPajJrZTRrNUNvaTJiMTY4bEUiLCJraWQiOiJhdXRoLXNlcnZlciIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJib3NzIiwidWlkIjoiY2FmOTQxMGEtMjMyNy00MTI1LTllNGYtMjUwMzU0OWY2OWM1IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDkwIiwidW4iOiJib3NzIiwiZXhwIjoxNjg0MzQ3MDYyLCJpYXQiOjE2ODQxNzQyNjJ9.I149yuL33R1ErQVJBJK5V43oQYzVu-KDrnd7gwviZPsu4ct7nAXvhalw8_Rw2MYh5ObzLrYtQiT-nJtiXcx-dD34M9cQ4VezoeytFwh8U5G6t-C-S_j8kwrHnsiAzL90glNHQ3ZLFhWY_N9_GV5QfqOXL4QEGQDbK2V7IHsofiOzYTtqTgsslrPecENoi6WUbeQKqpjiSggci0YNR3gsZavqLZz-FeISLwxgy4tFe4opKnJYTc73GQJYzpWv69qWOBbldtkxt6XBql3oiHG_BE5fInlMUDSQVWCgZhEueIOI7ju3pc4WQVM_mPWa4gxkJUi9K_tyflNjBcydNfXqdQ\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_AUTH}}/auth/api/v1/oauth2/token",
+							"host": [
+								"{{HOST_AUTH}}"
+							],
+							"path": [
+								"auth",
+								"api",
+								"v1",
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "core",
+			"item": [
+				{
+					"name": "bots",
+					"item": [
+						{
+							"name": "create bot",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.environment.set(\"LAST_BOT_ID\", jsonData[\"id\"]);\r",
+											"\r",
+											"pm.test(\"Successful create bot\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Мой первый бот\",\r\n    \"url\": \"http://telegram.org/my_first_bot\",\r\n    \"username\": \"SuperFirstBot\",\r\n    \"hash\": \"bot token1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update bot",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.environment.set(\"LAST_BOT_ID\", jsonData[\"id\"]);\r",
+											"\r",
+											"pm.test(\"Successful update bot\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"3c5896ac-9b42-4510-a818-363b3ab4067e\",\r\n    \"title\": \"Мой первый бот\",\r\n    \"username\": \"SuperFirstBot\",\r\n    \"url\": \"http://telegram.org/my_first_bot\",\r\n    \"hash\": \"bot token 2\",\r\n    \"status\": \"enabled\",\r\n    \"createdBy\": \"caf9410a-2327-4125-9e4f-2503549f69c5\",\r\n    \"createdDate\": \"2023-05-21T16:28:12.73726+03:00\",\r\n    \"version\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "findById bot",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot/:id",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{LAST_BOT_ID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "findAll bots",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"filters\": [\r\n        {\r\n            \"operation\": \"or\",\r\n            \"value\": [\r\n                {\r\n                    \"field\": \"username\",\r\n                    \"operation\": \"equals\",\r\n                    \"value\": [\r\n                        \"SuperFirstBot\"\r\n                    ]\r\n                },\r\n                {\r\n                    \"field\": \"title\",\r\n                    \"operation\": \"equals\",\r\n                    \"value\": [\r\n                        \"Мой первый бота\"\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"paging\": {\r\n        \"page\": 0,\r\n        \"pageSize\": 10\r\n    },\r\n    \"sort\": [\r\n        {\r\n            \"field\": \"hash\",\r\n            \"order\": 1,\r\n            \"type\": \"asc\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot/list",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "actions",
+					"item": [
+						{
+							"name": "create action",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.environment.set(\"LAST_ACTION_ID\", jsonData[\"id\"]);\r",
+											"\r",
+											"pm.test(\"Successful create action\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Мое действие\",\r\n    \"type\": \"START\",\r\n    \"data\": \"any\",\r\n    \"locale\": \"ru\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot-action",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot-action"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update action",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.environment.set(\"LAST_ACTION_ID\", jsonData[\"id\"]);\r",
+											"\r",
+											"pm.test(\"Successful update action\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"ec81d2ab-b4ab-4fd7-a14a-9b64d1303e08\",\r\n    \"title\": \"Мое действие 123\",\r\n    \"type\": \"START\",\r\n    \"data\": {},\r\n    \"locale\": \"ru\",\r\n    \"createdBy\": \"caf9410a-2327-4125-9e4f-2503549f69c5\",\r\n    \"createdDate\": \"2023-05-21T18:21:06.687123+03:00\",\r\n    \"version\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot-action",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot-action"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "findById action",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot-action/:id",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot-action",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{LAST_ACTION_ID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "findAll actions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"filters\": [\r\n        {\r\n            \"field\": \"type\",\r\n            \"operation\": \"equals\",\r\n            \"value\": [\r\n                \"START\"\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot-action/list",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot-action",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "position",
+					"item": [
+						{
+							"name": "create position",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.environment.set(\"LAST_POSITION_ID\", jsonData[\"id\"]);\r",
+											"\r",
+											"pm.test(\"Successful create position\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Моя позиция\",\r\n    \"botId\": \"{{LAST_BOT_ID}}\",\r\n    \"actionId\": \"{{LAST_ACTION_ID}}\",\r\n    \"fromPosition\": \"start\",\r\n    \"toPosition\": \"menu_01\",\r\n    \"locale\": \"ru\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot-position",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot-position"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update position",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.environment.set(\"LAST_POSITION_ID\", jsonData[\"id\"]);\r",
+											"\r",
+											"pm.test(\"Successful update position\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"6bd1a478-18e3-416e-894f-3543f1d8c422\",\r\n    \"title\": \"Моя позиция 123\",\r\n    \"botId\": \"b6b80cc3-05aa-4d81-9ccd-33c173ea9ecf\",\r\n    \"actionId\": \"ec81d2ab-b4ab-4fd7-a14a-9b64d1303e08\",\r\n    \"fromPosition\": \"start\",\r\n    \"toPosition\": \"menu_01\",\r\n    \"locale\": \"ru\",\r\n    \"createdBy\": \"caf9410a-2327-4125-9e4f-2503549f69c5\",\r\n    \"createdDate\": \"2023-05-21T18:31:03.238836+03:00\",\r\n    \"version\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot-position",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot-position"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "findById position",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot-position/:id",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot-position",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{LAST_POSITION_ID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "findAll positions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"filters\": [\r\n        {\r\n            \"field\": \"actionId\",\r\n            \"operation\": \"in\",\r\n            \"value\": [\r\n                \"{{LAST_ACTION_ID}}\",\r\n                \"ec81d2ab-b4ab-4fd7-a14a-9b64d1303e02\",\r\n                \"ec81d2ab-b4ab-4fd7-a14a-9b64d1303e03\"\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST_CORE}}/core/api/v1/bot-position/list",
+									"host": [
+										"{{HOST_CORE}}"
+									],
+									"path": [
+										"core",
+										"api",
+										"v1",
+										"bot-position",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

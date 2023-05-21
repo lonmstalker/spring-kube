@@ -19,7 +19,6 @@ import java.util.UUID
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
     imports = [UUID::class, UserRole::class, UserStatus::class]
 )
-@JvmDefaultWithCompatibility
 interface UserMapper {
 
     @Mapping(target = "invitedBy", ignore = true)

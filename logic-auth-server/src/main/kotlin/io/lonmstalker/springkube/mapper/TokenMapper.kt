@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit
     componentModel = "spring",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR
 )
-@JvmDefaultWithCompatibility
 interface TokenMapper {
 
     fun toDto(userTokenInfo: UserTokenInfo): TokenResponseDto
