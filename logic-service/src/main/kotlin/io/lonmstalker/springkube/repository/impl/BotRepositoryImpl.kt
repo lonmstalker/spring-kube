@@ -11,6 +11,7 @@ import io.lonmstalker.springkube.model.tables.references.BOT
 import io.lonmstalker.springkube.repository.BotRepository
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.jooq.Condition
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -24,20 +25,10 @@ class BotRepositoryImpl(
 ) : BotRepository {
 
     override suspend fun findAllByUser(userId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>> =
-        this.jooqHelper.selectFluxWithCount(
-            BOT,
-            request,
-            { this.botMapper.map(it) },
-            BOT.CREATED_BY.eq(userId)
-        )
+        request.selectFluxWithCount(BOT.CREATED_BY.eq(userId))
 
     override suspend fun findAllByGroup(userGroupId: UUID, request: FilterRequest): Pair<PageResponse, List<Bot>> =
-        this.jooqHelper.selectFluxWithCount(
-            BOT,
-            request,
-            { this.botMapper.map(it) },
-            BOT.USER_GROUP_ID.eq(userGroupId)
-        )
+        request.selectFluxWithCount(BOT.USER_GROUP_ID.eq(userGroupId))
 
     override suspend fun save(bot: Bot, userInfo: UserInfo): Bot =
         this.ctx
@@ -89,4 +80,12 @@ class BotRepositoryImpl(
             .and(BOT.CREATED_BY.eq(userInfo.userId).or(BOT.USER_GROUP_ID.eq(userInfo.userGroupId)))
             .awaitFirstOrNull()
             ?.map { this.botMapper.map(it) }
+
+    private suspend fun FilterRequest.selectFluxWithCount(condition: Condition) =
+        jooqHelper.selectFluxWithCount(
+            BOT,
+            this,
+            { botMapper.map(it) },
+            condition
+        )
 }

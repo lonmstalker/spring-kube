@@ -8,12 +8,10 @@ import java.util.*
 
 interface BotAuditService {
     suspend fun findAll(
+        botId: UUID,
         userInfo: UserInfo,
-        request: FilterRequest,
-        onlyCurrentUser: Boolean
+        request: FilterRequest
     ): Pair<PageResponse, List<BotActionAudit>>
 
-    suspend fun findById(id: UUID, userInfo: UserInfo): BotActionAudit
-    suspend fun save(bot: BotActionAudit, userInfo: UserInfo): BotActionAudit
-    suspend fun update(bot: BotActionAudit, userInfo: UserInfo): BotActionAudit
+    suspend fun save(audit: BotActionAudit, userInfo: UserInfo): BotActionAudit
 }

@@ -19,6 +19,6 @@ interface PositionMapper : RecordMapper<Record, BotPositionInfo> {
 
     fun toDto(position: BotPositionInfo): BotPositionInfoDto
 
-    override fun map(record: Record): BotPositionInfo? =
+    override fun map(record: Record): BotPositionInfo =
         this.fromRecord(record.into(BotPositionInfoRecord::class.java))
 }

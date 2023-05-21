@@ -14,6 +14,6 @@ interface BotActionService {
     ): Pair<PageResponse, List<BotAction>>
 
     suspend fun findById(id: UUID, userInfo: UserInfo): BotAction
-    suspend fun save(bot: BotAction, userInfo: UserInfo): BotAction
-    suspend fun update(bot: BotAction, userInfo: UserInfo): BotAction
+    suspend fun save(action: BotAction, userInfo: UserInfo): BotAction
+    suspend fun update(action: BotAction, userInfo: UserInfo): BotAction
 }

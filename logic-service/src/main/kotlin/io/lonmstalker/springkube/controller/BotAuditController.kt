@@ -6,8 +6,9 @@ import io.lonmstalker.springkube.dto.FilterRequestDto
 import io.lonmstalker.springkube.mapper.AuditMapper
 import io.lonmstalker.springkube.mapper.FilterMapper
 import io.lonmstalker.springkube.service.BotAuditService
-import io.lonmstalker.springkube.utils.UserUtils
+import io.lonmstalker.springkube.utils.UserUtils.getUser
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
 class BotAuditController(
@@ -16,9 +17,9 @@ class BotAuditController(
     private val botAuditService: BotAuditService
 ) : AuditApi {
 
-    override suspend fun findAll(filterRequestDto: FilterRequestDto): FilterBotActionAuditResponseDto =
+    override suspend fun findAll(botId: UUID, filterRequestDto: FilterRequestDto): FilterBotActionAuditResponseDto =
         this.botAuditService
-            .findAll(UserUtils.getUser(), this.filterMapper.toModel(filterRequestDto), true)
+            .findAll(botId, getUser(), this.filterMapper.toModel(filterRequestDto))
             .let {
                 FilterBotActionAuditResponseDto(
                     filterMapper.toDto(it.first),

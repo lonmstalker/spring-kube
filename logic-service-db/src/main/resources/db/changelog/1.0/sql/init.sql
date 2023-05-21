@@ -24,16 +24,16 @@ CREATE TABLE bot
 CREATE TABLE bot_user_info
 (
     id               UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
-    bot_id           UUID REFERENCES bot (id)                  NOT NULL,
-    telegram_id      VARCHAR(255)                              NOT NULL,
-    username         VARCHAR(255)                              NOT NULL,
-    current_position VARCHAR(100)             DEFAULT 'START'  NOT NULL,
-    email            VARCHAR(255)                              NULL,
-    phone            VARCHAR(255)                              NULL,
-    full_name        VARCHAR(255)                              NULL,
-    status           VARCHAR(100)             DEFAULT 'ACTIVE' NOT NULL,
-    current_locale   VARCHAR(10)              DEFAULT 'ru'     NOT NULL,
-    created_date     TIMESTAMP WITH TIME ZONE DEFAULT now()    NOT NULL
+    bot_id           UUID REFERENCES bot (id) ON DELETE CASCADE NOT NULL,
+    telegram_id      VARCHAR(255)                               NOT NULL,
+    username         VARCHAR(255)                               NOT NULL,
+    current_position VARCHAR(100)             DEFAULT 'START'   NOT NULL,
+    email            VARCHAR(255)                               NULL,
+    phone            VARCHAR(255)                               NULL,
+    full_name        VARCHAR(255)                               NULL,
+    status           VARCHAR(100)             DEFAULT 'ACTIVE'  NOT NULL,
+    current_locale   VARCHAR(10)              DEFAULT 'ru'      NOT NULL,
+    created_date     TIMESTAMP WITH TIME ZONE DEFAULT now()     NOT NULL
 );
 -- rollback drop table bot_user_info;
 
@@ -56,16 +56,16 @@ CREATE TABLE bot_action
 CREATE TABLE bot_position_info
 (
     id            UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
-    title         VARCHAR(255)                           NOT NULL,
-    bot_id        UUID REFERENCES bot (id),
-    action_id     UUID REFERENCES bot_action (id),
-    from_position VARCHAR(100)                           NOT NULL,
-    to_position   VARCHAR(100)                           NULL,
-    user_group_id UUID                                   NOT NULL,
-    locale        VARCHAR(10)              DEFAULT 'ru'  NOT NULL,
-    created_by    UUID                                   NOT NULL,
-    created_date  TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    version       INT                      DEFAULT 0     NOT NULL,
+    title         VARCHAR(255)                               NOT NULL,
+    bot_id        UUID REFERENCES bot (id) ON DELETE CASCADE NOT NULL,
+    action_id     UUID REFERENCES bot_action (id)            NOT NULL,
+    from_position VARCHAR(100)                               NOT NULL,
+    to_position   VARCHAR(100)                               NULL,
+    user_group_id UUID                                       NOT NULL,
+    locale        VARCHAR(10)              DEFAULT 'ru'      NOT NULL,
+    created_by    UUID                                       NOT NULL,
+    created_date  TIMESTAMP WITH TIME ZONE DEFAULT now()     NOT NULL,
+    version       INT                      DEFAULT 0         NOT NULL,
     UNIQUE (from_position, bot_id, locale)
 );
 -- rollback drop table bot_position_info;
@@ -74,9 +74,9 @@ CREATE TABLE bot_position_info
 CREATE TABLE bot_action_audit
 (
     id           UUID                     DEFAULT uuid_generate_v1() PRIMARY KEY,
-    position_id  UUID REFERENCES bot_position_info (id) NOT NULL,
-    user_id      UUID REFERENCES bot_user_info (id)     NOT NULL,
-    created_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    position_id  UUID REFERENCES bot_position_info (id) ON DELETE CASCADE NOT NULL,
+    user_id      UUID REFERENCES bot_user_info (id)                       NOT NULL,
+    created_date TIMESTAMP WITH TIME ZONE DEFAULT now()                   NOT NULL
 );
 -- rollback drop table bot_action_audit;
 

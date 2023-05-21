@@ -8,6 +8,7 @@ import io.lonmstalker.springkube.mapper.UserInfoMapper
 import io.lonmstalker.springkube.service.UserInfoService
 import io.lonmstalker.springkube.utils.UserUtils.getUser
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
 class TelegramUserInfoController(
@@ -16,9 +17,9 @@ class TelegramUserInfoController(
     private val userInfoService: UserInfoService,
 ) : TelegramUserApi {
 
-    override suspend fun findAll(filterRequestDto: FilterRequestDto): FilterBotUserInfoResponseDto =
+    override suspend fun findAll(botId: UUID, filterRequestDto: FilterRequestDto): FilterBotUserInfoResponseDto =
         this.userInfoService
-            .findAll(getUser(), this.filterMapper.toModel(filterRequestDto), true)
+            .findAll(botId, getUser(), this.filterMapper.toModel(filterRequestDto))
             .let {
                 FilterBotUserInfoResponseDto(
                     filterMapper.toDto(it.first),

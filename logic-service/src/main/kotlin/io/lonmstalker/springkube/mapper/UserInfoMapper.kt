@@ -16,7 +16,7 @@ interface UserInfoMapper : RecordMapper<Record, BotUserInfo> {
 
     fun toDto(userInfo: BotUserInfo): BotUserInfoDto
 
-    override fun map(record: Record): BotUserInfo? =
+    override fun map(record: Record): BotUserInfo =
         this.fromRecord(record.into(BotUserInfoRecord::class.java))
 
     fun map(status: UserStatus): BotUserInfoDto.Status =

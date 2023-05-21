@@ -14,6 +14,6 @@ interface BotPositionService {
     ): Pair<PageResponse, List<BotPositionInfo>>
 
     suspend fun findById(id: UUID, userInfo: UserInfo): BotPositionInfo
-    suspend fun save(bot: BotPositionInfo, userInfo: UserInfo): BotPositionInfo
-    suspend fun update(bot: BotPositionInfo, userInfo: UserInfo): BotPositionInfo
+    suspend fun save(position: BotPositionInfo, userInfo: UserInfo): BotPositionInfo
+    suspend fun update(position: BotPositionInfo, userInfo: UserInfo): BotPositionInfo
 }

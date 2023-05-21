@@ -37,7 +37,6 @@ class ExceptionConfig {
         @Order(Ordered.HIGHEST_PRECEDENCE)
         fun exceptionHandler(
             clockHelper: ClockHelper,
-            objectMapper: ObjectMapper,
             servletMessageHelper: ServletMessageHelper
         ) = ServletExceptionHandler(clockHelper, servletMessageHelper)
     }

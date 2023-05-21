@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class BotActionAudit(
     val id: UUID,
-    val positionId: UUID,
     val userId: UUID,
+    val positionId: UUID,
     val createdDate: OffsetDateTime
 )

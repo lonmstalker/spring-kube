@@ -301,6 +301,8 @@ paths:
   ############# bot audit
   /audit/list:
     post:
+      parameters:
+        - $ref: '#/components/parameters/BotIdentifier'
       summary: 'Get all'
       operationId: 'findAll'
       description: 'Получить аудит по ботам'
@@ -323,6 +325,8 @@ paths:
   ############# user info
   /users/list:
     post:
+      parameters:
+        - $ref: '#/components/parameters/BotIdentifier'
       summary: 'Get all'
       operationId: 'findAll'
       description: 'Получить инфо пользователей ботов'
@@ -349,6 +353,14 @@ components:
       in: path
       required: true
       description: 'Идентификатор в ссылке'
+      schema:
+        type: string
+        format: uuid
+    BotIdentifier:
+      name: 'botId'
+      in: path
+      required: true
+      description: 'Идентификатор бота в ссылке'
       schema:
         type: string
         format: uuid

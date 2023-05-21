@@ -13,5 +13,6 @@ data class BotPositionInfo(
     val userGroupId: UUID,
     val locale: String,
     val createdBy: UUID,
-    val createdDate: OffsetDateTime
+    val createdDate: OffsetDateTime,
+    val version: Int
 )

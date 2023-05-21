@@ -15,6 +15,6 @@ interface AuditMapper : RecordMapper<Record, BotActionAudit> {
 
     fun toDto(audit: BotActionAudit): BotActionAuditDto
 
-    override fun map(record: Record): BotActionAudit? =
+    override fun map(record: Record): BotActionAudit =
         this.fromRecord(record.into(BotActionAuditRecord::class.java))
 }

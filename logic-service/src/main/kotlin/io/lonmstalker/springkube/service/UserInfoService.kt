@@ -7,13 +7,9 @@ import io.lonmstalker.springkube.model.paging.PageResponse
 import java.util.*
 
 interface UserInfoService {
-    suspend fun findAll(
-        userInfo: UserInfo,
-        request: FilterRequest,
-        onlyCurrentUser: Boolean
-    ): Pair<PageResponse, List<BotUserInfo>>
+    suspend fun findAll(botId: UUID, userInfo: UserInfo, request: FilterRequest): Pair<PageResponse, List<BotUserInfo>>
 
     suspend fun findById(id: UUID, userInfo: UserInfo): BotUserInfo
-    suspend fun save(bot: BotUserInfo, userInfo: UserInfo): BotUserInfo
-    suspend fun update(bot: BotUserInfo, userInfo: UserInfo): BotUserInfo
+    suspend fun save(user: BotUserInfo, userInfo: UserInfo): BotUserInfo
+    suspend fun update(user: BotUserInfo, userInfo: UserInfo): BotUserInfo
 }
